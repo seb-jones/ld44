@@ -2,6 +2,7 @@
  * [DONE] Limit Framerate 
  * [DONE] Load and Render an image
  *
+ * Load and Render a bitmap font
  * Load and Play audio
  */
 
@@ -36,6 +37,7 @@ SDLGlobals sdl     = {0};
 char temporary_string[1024];
 
 #include "render.c"
+#include "font.c"
 #include "game.c"
 
 void cleanup_sdl()
@@ -67,7 +69,7 @@ int main(int argc, char **argv)
     sdl.performance_frequency = SDL_GetPerformanceFrequency();
 
     sdl.window = SDL_CreateWindow("Test", 
-            SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600,
+            SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 640, 480,
             0);
     if (!sdl.window) {
         return log_error_and_cleanup_sdl("Unable to create window");
@@ -79,7 +81,11 @@ int main(int argc, char **argv)
         return log_error_and_cleanup_sdl("Unable to create renderer");
     }
 
-    setup_game();
+    SDL_RenderSetLogicalSize(sdl.renderer, 320, 240);
+
+    if (!setup_game()) {
+        return log_error_and_cleanup_sdl("Error setting up game");
+    }
 
     u64 start_time    = microtime();
     u64 previous_time = 0;
