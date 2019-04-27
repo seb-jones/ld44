@@ -21,7 +21,6 @@ double  minute_timer = 0;
 int     day = 0;
 int     hour = 12;
 int     minute = 58;
-Event  *displaying_event = &events[0];
 
 Sprite *player = 0;
 Sprite *sun = 0;
@@ -61,13 +60,16 @@ bool setup_game()
 bool update_game()
 {
     if (displaying_event) {
-        if (key_just_down(a_key)) {
+        if (event_conditions_fulfilled() && key_just_down(a_key)) {
             displaying_event->choice_a.callback();
             displaying_event = NULL;
         }
         else if (key_just_down(b_key)) {
             displaying_event->choice_b.callback();
             displaying_event = NULL;
+        }
+        else if (!event_conditions_fulfilled() && key_just_down(c_key)) {
+            show_event(get_bargain_by_name(displaying_event->bargain_name));
         }
     }
     else {
@@ -77,6 +79,8 @@ bool update_game()
 
             if (minute >= 60) {
                 ++hour;
+
+                show_event(&events[2]);
 
                 distance_left -= miles_per_hour;
 
@@ -125,15 +129,30 @@ bool update_game()
         draw_wrapped_string(font, temporary_string, 20, 100, 
                 render_width - 40);
 
+        if (!event_conditions_fulfilled()) {
+            font->color = 0xff888888;
+        }
+
         snprintf(temporary_string, TEMPORARY_STRING_SIZE,
                 "a - %s", displaying_event->choice_a.label);
 
         draw_string(font, temporary_string, 20, 130);
 
+        font->color = 0xffffffff;
+
         snprintf(temporary_string, TEMPORARY_STRING_SIZE,
                 "b - %s", displaying_event->choice_b.label);
 
         draw_string(font, temporary_string, 20, 145);
+
+        if (!event_conditions_fulfilled()) {
+            font->color = 0xffaa1111;
+            snprintf(temporary_string, TEMPORARY_STRING_SIZE,
+                    "c - Bargain", displaying_event->choice_b.label);
+
+            draw_string(font, temporary_string, 20, 160);
+            font->color = 0xffffffff;
+        }
     }
 
     return true;

@@ -8,6 +8,7 @@ typedef struct Font
     char first_character;
     int kerning;
     int line_spacing;
+    u32 color;
 }
 Font;
 
@@ -29,6 +30,7 @@ Font *load_bitmap_font(const char *filename, int glyph_width,
     font->first_character = first_character;
     font->kerning = 1;
     font->line_spacing = 3;
+    font->color = 0xffffffff;
 
     return font;
 }
@@ -58,6 +60,11 @@ void draw_glyph(Font *font, char c, int x, int y)
     }
 
     SDL_Rect destination = { x, y, font->glyph_width, font->glyph_height };
+
+    u8 r, g, b;
+    hex_to_argb(font->color, NULL, &r, &g, &b);
+    SDL_SetTextureColorMod(font->texture->handle, r, g, b);
+
     SDL_RenderCopy(sdl.renderer, font->texture->handle, &source, &destination);
 }
 
