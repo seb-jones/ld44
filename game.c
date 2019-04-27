@@ -24,17 +24,15 @@ int     minute = 58;
 
 Sprite *player = 0;
 Sprite *sun = 0;
+Sprite *devil = 0;
 Font   *font = 0;
 
 bool setup_game()
 {
-    // Player
-    player = load_sprite("assets/player.bmp");
-    if (!player)
+    // Font
+    font = load_bitmap_font("assets/font.bmp", 6, 8, 16, 6, ' ');
+    if (!font)
         return false;
-
-    player->x = render_width / 2 - player->width / 2;
-    player->y = render_height - player->height * 2;
 
     // Sun
     sun = load_sprite("assets/sun.bmp");
@@ -46,10 +44,22 @@ bool setup_game()
     sun->x = 250; 
     sun->y = 50;
 
-    // Font
-    font = load_bitmap_font("assets/font.bmp", 6, 8, 16, 6, ' ');
-    if (!font)
+    // Player
+    player = load_sprite("assets/player.bmp");
+    if (!player)
         return false;
+
+    player->x = render_width / 2 - player->width / 2;
+    player->y = render_height - player->height * 2;
+
+    // Devil
+    devil = load_sprite("assets/devil.bmp");
+    if (!devil)
+        return false;
+
+    devil->x = render_width - devil->width - 20;
+    devil->y = render_height - devil->height * 2;
+    devil->visible = false;
 
     return true;
 }
@@ -63,13 +73,16 @@ bool update_game()
         if (event_conditions_fulfilled() && key_just_down(a_key)) {
             displaying_event->choice_a.callback();
             displaying_event = NULL;
+            devil->visible = false;
         }
         else if (key_just_down(b_key)) {
             displaying_event->choice_b.callback();
             displaying_event = NULL;
+            devil->visible = false;
         }
         else if (!event_conditions_fulfilled() && key_just_down(c_key)) {
             show_event(get_bargain_by_name(displaying_event->bargain_name));
+            devil->visible = true;
         }
     }
     else {
@@ -118,6 +131,9 @@ bool update_game()
 
     // Player
     draw_sprite(player);
+
+    // Devil
+    draw_sprite(devil);
 
     // Text
     snprintf(temporary_string, TEMPORARY_STRING_SIZE, "Day %i | Time %02i:%02i\n%.0f miles left to town", day, hour, minute, distance_left);

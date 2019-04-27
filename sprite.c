@@ -1,12 +1,13 @@
 typedef struct Sprite
 {
-    Texture *texture;
-    int x;
-    int y;
-    int width;
-    int height;
-    u32 color;
-    u8  alpha;
+    Texture    *texture;
+    int         x;
+    int         y;
+    int         width;
+    int         height;
+    u32         color;
+    u8          alpha;
+    bool        visible;
 }
 Sprite;
 
@@ -27,10 +28,14 @@ Sprite *load_sprite(const char *filename)
     sprite->alpha = 0xff;
     sprite->width = sprite->texture->width;
     sprite->height = sprite->texture->height;
+    sprite->visible = true;
 }
 
 void draw_sprite(Sprite *sprite)
 {
+    if (!sprite->visible)
+        return;
+
     u8 r, g, b;
     hex_to_argb(sprite->color, NULL, &r, &g, &b);
 
