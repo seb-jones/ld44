@@ -112,8 +112,20 @@ bool update_game()
     draw_string(font, temporary_string, 2, 2);
 
     if (displaying_event) {
-        draw_wrapped_string(font, displaying_event->label, 20, 100, 
+        snprintf(temporary_string, TEMPORARY_STRING_SIZE,
+                "%s Do you...", displaying_event->label);
+        draw_wrapped_string(font, temporary_string, 20, 100, 
                 render_width - 40);
+
+        snprintf(temporary_string, TEMPORARY_STRING_SIZE,
+                "a - %s", displaying_event->choice_a.label);
+
+        draw_string(font, temporary_string, 20, 130);
+
+        snprintf(temporary_string, TEMPORARY_STRING_SIZE,
+                "b - %s", displaying_event->choice_b.label);
+
+        draw_string(font, temporary_string, 20, 145);
     }
 
     return true;

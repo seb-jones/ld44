@@ -9,8 +9,8 @@ typedef struct Event
 {
     char *name;
     char *label;
-    Choice a;
-    Choice b;
+    Choice choice_a;
+    Choice choice_b;
 }
 Event;
 
@@ -39,8 +39,8 @@ Event events[EVENTS_SIZE] = {
     {
         "creek",
         "You arrive at a creek. There is a poorly maintained bridge.",
-        { "Cross the bridge.",  crossTheBridge, },
-        { "Find another way.",  findAnotherWay, },
+        { "Cross the bridge",  crossTheBridge, },
+        { "Find another way",  findAnotherWay, },
     },
     {
         "priest",
