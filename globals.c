@@ -9,6 +9,7 @@ const char *a_key = "A";
 const char *b_key = "B";
 const char *c_key = "C";
 const char *okay_key = "Return";
+const char *fullscreen_key = "F11";
 
 // Gameplay
 double  distance_left = 100.0;

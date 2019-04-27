@@ -29,6 +29,8 @@ SDLGlobals  sdl = {0};
 #define TEMPORARY_STRING_SIZE 5012
 char *temporary_string;
 
+int window_width = 640;
+int window_height = 480;
 int render_width = 320;
 int render_height = 240;
 
@@ -67,6 +69,14 @@ u64 microtime()
     return (SDL_GetPerformanceCounter() * 1000000) / sdl.performance_frequency;
 }
 
+void toggle_fullscreen()
+{
+    if (SDL_GetWindowFlags(sdl.window) & SDL_WINDOW_FULLSCREEN_DESKTOP) 
+        SDL_SetWindowFullscreen(sdl.window, 0);
+    else
+        SDL_SetWindowFullscreen(sdl.window, SDL_WINDOW_FULLSCREEN_DESKTOP);
+}
+
 int main(int argc, char **argv)
 {
     srand(time(0));
@@ -77,9 +87,17 @@ int main(int argc, char **argv)
 
     sdl.performance_frequency = SDL_GetPerformanceFrequency();
 
+#ifdef NDEBUG
+    int window_x = SDL_WINDOWPOS_CENTERED;
+#else
+    SDL_Rect display_bounds;
+    SDL_GetDisplayBounds(0, &display_bounds);
+    int window_x = display_bounds.w / 2;
+#endif
+
     sdl.window = SDL_CreateWindow("Test", 
-            SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 640, 480,
-            0);
+            window_x, SDL_WINDOWPOS_CENTERED, 
+            window_width, window_height, 0);
     if (!sdl.window) {
         return log_sdl_error_and_cleanup_sdl("Unable to create window");
     }
@@ -140,6 +158,10 @@ int main(int argc, char **argv)
         if (!running) break;
 
         update_input();
+
+        if (key_just_down(fullscreen_key)) {
+            toggle_fullscreen();
+        }
 
         SDL_SetRenderDrawColor(sdl.renderer, 33, 33, 33, SDL_ALPHA_OPAQUE);
         SDL_RenderClear(sdl.renderer);
