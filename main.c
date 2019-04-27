@@ -39,6 +39,7 @@ char temporary_string[1024];
 int render_width = 320;
 int render_height = 240;
 
+#include "globals.c"
 #include "input.c"
 #include "render.c"
 #include "font.c"
@@ -118,13 +119,16 @@ int main(int argc, char **argv)
     while (running) {
         previous_time = start_time;
         start_time = microtime();
+
+        elapsed_seconds = ((double)start_time - (double)previous_time) / 1000000.0;
         
         fps_timer += start_time - previous_time;
 
         while (fps_timer >= 1000000) {
             fps_timer -= 1000000;
 
-            snprintf(temporary_string, TEMPORARY_STRING_SIZE, "FPS: %u", fps);
+            snprintf(temporary_string, TEMPORARY_STRING_SIZE, "FPS: %u DT: %f", fps,
+                    elapsed_seconds);
             SDL_SetWindowTitle(sdl.window, temporary_string);
 
             fps = 0;

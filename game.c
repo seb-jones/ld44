@@ -2,14 +2,10 @@ Sprite *player = 0;
 Sprite *sun = 0;
 Font   *font = 0;
 
-const char *right_key = "Right";
-const char *left_key = "Left";
-const char *up_key = "Up";
-const char *down_key = "Down";
-
-int food =  10;
-int water = 50;
-int money = 2;
+int day = 0;
+int hour = 23;
+int minute = 59;
+double minute_timer = 0;
 
 bool setup_game()
 {
@@ -43,6 +39,24 @@ bool setup_game()
 // Returns false when the program should end
 bool update_game()
 {
+    minute_timer += elapsed_seconds;
+    while(minute_timer >= 1.0) {
+        ++minute;
+
+        if (minute >= 60) {
+            ++hour;
+            
+            if (hour >= 24) {
+                hour = 0;
+
+                ++day;
+            }
+
+            minute = 0;
+        }
+        minute_timer -= 1.0;
+    }
+
     // Sky
     set_hex_color(0xff4080ff);
     draw_rectangle(0, 0, render_width, render_height);
@@ -58,8 +72,7 @@ bool update_game()
     draw_sprite(player);
 
     // Resources
-    snprintf(temporary_string, TEMPORARY_STRING_SIZE, "Food: %i | Water: %i | Money: %i",
-            food, water, money);
+    snprintf(temporary_string, TEMPORARY_STRING_SIZE, "Day: %i | Time %02i:%02i", day, hour, minute);
     draw_string(font, temporary_string, 2, 2);
 
     return true;
