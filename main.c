@@ -1,13 +1,14 @@
 /* TODO
  * [DONE] Limit Framerate 
+ * [DONE] Load and Render an image
  *
- * Load and Render an image
  * Load and Play audio
  */
 
 #include <assert.h>
 #include <stdbool.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 #include <SDL2/SDL.h>
 
@@ -33,6 +34,9 @@ SDLGlobals sdl     = {0};
 
 #define TEMPORARY_STRING_SIZE 1024
 char temporary_string[1024];
+
+#include "render.c"
+#include "game.c"
 
 void cleanup_sdl()
 {
@@ -75,6 +79,8 @@ int main(int argc, char **argv)
         return log_error_and_cleanup_sdl("Unable to create renderer");
     }
 
+    setup_game();
+
     u64 start_time    = microtime();
     u64 previous_time = 0;
     u64 elapsed_time  = 0;
@@ -112,6 +118,12 @@ int main(int argc, char **argv)
 
         SDL_SetRenderDrawColor(sdl.renderer, 64, 128, 255, SDL_ALPHA_OPAQUE);
         SDL_RenderClear(sdl.renderer);
+
+        if (!update_game()) {
+            running = false;
+            break;
+        }
+
         SDL_RenderPresent(sdl.renderer);
 
         while (( elapsed_time = microtime() - start_time ) < time_per_frame) {
