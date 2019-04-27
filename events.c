@@ -54,7 +54,7 @@ void ignorePriest()
 
 bool checkForBandage()
 {
-    return false;
+    return bandages > 0;
 }
 
 void applyBandage()

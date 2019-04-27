@@ -15,17 +15,12 @@ SkyColor sky_colors[SKY_COLORS_SIZE] = {
     { 0, 6, 0xff000044 },
 };
 
-double  distance_left = 100.0;
-double  miles_per_hour = 1.0;
-double  minute_timer = 0;
-int     day = 0;
-int     hour = 12;
-int     minute = 58;
-
 Sprite *player = 0;
 Sprite *sun = 0;
 Sprite *devil = 0;
 Font   *font = 0;
+
+double  minute_timer = 0;
 
 bool setup_game()
 {
@@ -136,7 +131,7 @@ bool update_game()
     draw_sprite(devil);
 
     // Text
-    snprintf(temporary_string, TEMPORARY_STRING_SIZE, "Day %i | Time %02i:%02i\n%.0f miles left to town", day, hour, minute, distance_left);
+    snprintf(temporary_string, TEMPORARY_STRING_SIZE, "Day %i | Time %02i:%02i\n%.0f miles left to town\nFood - %i | Bandages - %i | Money - %i", day, hour, minute, distance_left, food, bandages, money);
     draw_string(font, temporary_string, 2, 2);
 
     if (displaying_event) {
