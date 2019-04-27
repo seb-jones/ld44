@@ -43,13 +43,18 @@ Texture *destroy_texture(Texture *texture)
     return NULL;
 }
 
+void hex_to_argb(u32 hex, u8 *a, u8 *r, u8 *g, u8 *b)
+{
+    if (b) *b = hex;
+    if (g) *g = hex >> 8;
+    if (r) *r = hex >> 16;
+    if (a) *a = hex >> 24;
+}
+
 void set_hex_color(u32 color)
 {
-    u8 b = color;
-    u8 g = color >> 8;
-    u8 r = color >> 16;
-    u8 a = color >> 24;
-
+    u8 a, r, g, b;
+    hex_to_argb(color, &a, &r, &g, &b);
     SDL_SetRenderDrawColor(sdl.renderer, r, g, b, a);
 }
 
