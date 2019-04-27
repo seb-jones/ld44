@@ -51,11 +51,39 @@ void hex_to_argb(u32 hex, u8 *a, u8 *r, u8 *g, u8 *b)
     if (a) *a = hex >> 24;
 }
 
+u32 argb_to_hex(u8 a, u8 r, u8 g, u8 b)
+{
+    return b | (g << 8) | (r << 16) | (a << 24);
+}
+
 void set_hex_color(u32 color)
 {
     u8 a, r, g, b;
     hex_to_argb(color, &a, &r, &g, &b);
     SDL_SetRenderDrawColor(sdl.renderer, r, g, b, a);
+}
+
+u8 lerp_u8(u8 a, u8 b, double t)
+{
+    return a + (u8)((double)(b - a) * t);
+}
+
+u32 lerp_color(u32 color_1, u32 color_2, double t)
+{
+    u8 a1, r1, g1, b1;
+    u8 a2, r2, g2, b2;
+
+    hex_to_argb(color_1, &a1, &r1, &g1, &b1);
+    hex_to_argb(color_2, &a2, &r2, &g2, &b2);
+
+    u8 a, r, g, b;
+
+    a = lerp_u8(a1, a2, t);
+    r = lerp_u8(r1, r2, t);
+    g = lerp_u8(g1, g2, t);
+    b = lerp_u8(b1, b2, t);
+
+    return argb_to_hex(a, r, g, b);
 }
 
 void draw_rectangle(int x, int y, int width, int height)

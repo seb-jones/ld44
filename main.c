@@ -1,4 +1,5 @@
 #include <assert.h>
+#include <math.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -40,6 +41,7 @@ int render_height = 240;
 #include "font.c"
 #include "sprite.c"
 #include "events.c"
+#include "sky.c"
 #include "game.c"
 
 void cleanup_sdl()

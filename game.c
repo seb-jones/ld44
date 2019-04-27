@@ -1,22 +1,4 @@
-typedef struct SkyColor
-{
-    int start_hour;
-    int end_hour;
-    u32 color;
-}
-SkyColor;
-
-#define SKY_COLORS_SIZE 5
-SkyColor sky_colors[SKY_COLORS_SIZE] = {
-    { 6, 9, 0xfffa742d },
-    { 9, 15, 0xff4080ff },
-    { 15, 18, 0xff8a340d },
-    { 18, 24, 0xff000044 },
-    { 0, 6, 0xff000044 },
-};
-
 Sprite *player = 0;
-Sprite *sun = 0;
 Sprite *devil = 0;
 Font   *font = 0;
 
@@ -31,15 +13,8 @@ bool setup_game()
     if (!font)
         return false;
 
-    // Sun
-    sun = load_sprite("assets/sun.bmp");
-    if (!sun)
+    if (!load_sky())
         return false;
-
-    sun->color = 0xffffff88;
-    sun->alpha = 0xdd;
-    sun->x = 250; 
-    sun->y = 50;
 
     // Player
     player = load_sprite("assets/player.bmp");
@@ -95,7 +70,7 @@ bool update_game()
             if (minute >= 60) {
                 ++hour;
 
-                show_event(get_random_event());
+                //show_event(get_random_event());
 
                 distance_left -= miles_per_hour;
 
@@ -111,21 +86,7 @@ bool update_game()
         }
     }
 
-    // Sky
-    {
-        u32 sky_color = 0xffff00ff;
-        for (int i = 0; i < SKY_COLORS_SIZE; ++i) {
-            if (hour >= sky_colors[i].start_hour && hour < sky_colors[i].end_hour) {
-                sky_color = sky_colors[i].color;
-            }
-        }
-
-        set_hex_color(sky_color);
-        draw_rectangle(0, 0, render_width, render_height);
-    }
-
-    // Sun
-    draw_sprite(sun);
+    draw_sky();
 
     // Floor
     set_hex_color(0xffffd8b0);
