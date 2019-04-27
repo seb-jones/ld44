@@ -15,14 +15,17 @@ SkyColor sky_colors[SKY_COLORS_SIZE] = {
     { 0, 6, 0xff000044 },
 };
 
-Sprite *player = 0;
-Sprite *sun = 0;
-Font   *font = 0;
-
 int day = 0;
 int hour = 12;
 int minute = 58;
 double minute_timer = 0;
+double distance_left = 100.0;
+double miles_per_hour = 1.0;
+
+Sprite *player = 0;
+Sprite *sun = 0;
+Font   *font = 0;
+
 
 bool setup_game()
 {
@@ -64,6 +67,8 @@ bool update_game()
         if (minute >= 60) {
             ++hour;
 
+            distance_left -= miles_per_hour;
+
             if (hour >= 24) {
                 hour = 0;
 
@@ -99,7 +104,7 @@ bool update_game()
     draw_sprite(player);
 
     // Text
-    snprintf(temporary_string, TEMPORARY_STRING_SIZE, "Day: %i | Time %02i:%02i", day, hour, minute);
+    snprintf(temporary_string, TEMPORARY_STRING_SIZE, "Day %i | Time %02i:%02i\n%.0f miles left to town", day, hour, minute, distance_left);
     draw_string(font, temporary_string, 2, 2);
 
     return true;

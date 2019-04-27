@@ -62,10 +62,20 @@ void draw_string(Font *font, const char *string, int x, int y)
     int glyph_x = x;
     int glyph_y = y;
     int kerning = 1;
+    int line_spacing = 3;
 
     while (*string) {
-        draw_glyph(font, *string, glyph_x, glyph_y);
-        glyph_x += font->glyph_width + kerning;
+        if (*string == '\n') {
+            glyph_y += font->glyph_height + line_spacing;
+            glyph_x = x;
+        }
+        else if (*string == '\t') {
+            glyph_x += font->glyph_width * 4;
+        }
+        else {
+            draw_glyph(font, *string, glyph_x, glyph_y);
+            glyph_x += font->glyph_width + kerning;
+        }
 
         ++string;
     }
