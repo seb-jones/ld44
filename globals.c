@@ -8,6 +8,7 @@ const char *down_key = "Down";
 const char *a_key = "A";
 const char *b_key = "B";
 const char *c_key = "C";
+const char *okay_key = "Return";
 
 // Gameplay
 double  distance_left = 100.0;

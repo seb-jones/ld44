@@ -1,7 +1,7 @@
 typedef struct Choice
 {
-    char *label;
-    void (*callback)();
+    char    *label;
+    char * (*callback)();
 }
 Choice;
 
@@ -27,29 +27,29 @@ bool event_conditions_fulfilled()
     return displaying_event->condition();
 }
 
-void show_event(Event *event)
+char *show_event(Event *event)
 {
     displaying_event = event;
 }
 
-void crossTheBridge()
+char *crossTheBridge()
 {
-    SDL_Log("You walk over the bridge");
+    return "You walk over the bridge";
 }
 
-void findAnotherWay()
+char *findAnotherWay()
 {
-    SDL_Log("You find another way to cross the creek");
+    return "You find another way to cross the creek";
 }
 
-void talkToPriest()
+char *talkToPriest()
 {
-    SDL_Log("You talk to the priest");
+    return "You talk to the priest";
 }
 
-void ignorePriest()
+char *ignorePriest()
 {
-    SDL_Log("You ignore the priest");
+    return "You ignore the priest";
 }
 
 bool checkForBandage()
@@ -57,19 +57,20 @@ bool checkForBandage()
     return bandages > 0;
 }
 
-void applyBandage()
+char *applyBandage()
 {
-    SDL_Log("You apply a bandage to the leg.");
+    --bandages;
+    return "You apply a bandage to the leg.";
 }
 
-void ignoreWound()
+char *ignoreWound()
 {
-    SDL_Log("You leave the wound untreated.");
+    return "You leave the wound untreated.";
 }
 
-void bargainBandage()
+char *bargainBandage()
 {
-    SDL_Log("You sell the stars in the sky for a healed wound.");
+    return "You sell the stars in the sky for a healed wound.";
 }
 
 #define EVENTS_SIZE 3

@@ -20,6 +20,8 @@ Sprite *sun = 0;
 Sprite *devil = 0;
 Font   *font = 0;
 
+char *displaying_outcome = NULL;
+
 double  minute_timer = 0;
 
 bool setup_game()
@@ -65,19 +67,24 @@ bool setup_game()
 bool update_game()
 {
     if (displaying_event) {
-        if (event_conditions_fulfilled() && key_just_down(a_key)) {
-            displaying_event->choice_a.callback();
-            displaying_event = NULL;
-            devil->visible = false;
+        if (displaying_outcome) {
+            if (key_just_down(okay_key)) {
+                displaying_outcome = NULL;
+                displaying_event = NULL;
+                devil->visible = false;
+            }
         }
-        else if (key_just_down(b_key)) {
-            displaying_event->choice_b.callback();
-            displaying_event = NULL;
-            devil->visible = false;
-        }
-        else if (!event_conditions_fulfilled() && key_just_down(c_key)) {
-            show_event(get_bargain_by_name(displaying_event->bargain_name));
-            devil->visible = true;
+        else {
+            if (event_conditions_fulfilled() && key_just_down(a_key)) {
+                displaying_outcome = displaying_event->choice_a.callback();
+            }
+            else if (key_just_down(b_key)) {
+                displaying_outcome = displaying_event->choice_b.callback();
+            }
+            else if (!event_conditions_fulfilled() && key_just_down(c_key)) {
+                show_event(get_bargain_by_name(displaying_event->bargain_name));
+                devil->visible = true;
+            }
         }
     }
     else {
@@ -134,7 +141,11 @@ bool update_game()
     snprintf(temporary_string, TEMPORARY_STRING_SIZE, "Day %i | Time %02i:%02i\n%.0f miles left to town\nFood - %i | Bandages - %i | Money - %i", day, hour, minute, distance_left, food, bandages, money);
     draw_string(font, temporary_string, 2, 2);
 
-    if (displaying_event) {
+    if (displaying_outcome) {
+        draw_wrapped_string(font, displaying_outcome, 20, 100, 
+                render_width - 40);
+    }
+    else if (displaying_event) {
         snprintf(temporary_string, TEMPORARY_STRING_SIZE,
                 "%s Do you...", displaying_event->label);
         draw_wrapped_string(font, temporary_string, 20, 100, 
