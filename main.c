@@ -1,9 +1,9 @@
 /* TODO
  * [DONE] Limit Framerate 
  * [DONE] Load and Render an image
+ * [DONE] Load and Render a bitmap font
  *
- * Load and Render a bitmap font
- * Load and Play audio
+ * Set up an Input system
  */
 
 #include <assert.h>
@@ -31,11 +31,12 @@ typedef struct SDLGlobals
 SDLGlobals;
 
 // Global Variables
-SDLGlobals sdl     = {0};
+SDLGlobals  sdl = {0};
 
 #define TEMPORARY_STRING_SIZE 1024
 char temporary_string[1024];
 
+#include "input.c"
 #include "render.c"
 #include "font.c"
 #include "game.c"
@@ -50,6 +51,13 @@ void cleanup_sdl()
 
 int log_error_and_cleanup_sdl(char *message)
 {
+    SDL_Log("%s", message);
+    cleanup_sdl();
+    return 1;
+}
+
+int log_sdl_error_and_cleanup_sdl(char *message)
+{
     SDL_Log("%s: %s", message, SDL_GetError());
     cleanup_sdl();
     return 1;
@@ -63,7 +71,7 @@ u64 microtime()
 int main(int argc, char **argv)
 {
     if (SDL_Init(SDL_INIT_VIDEO|SDL_INIT_AUDIO) != 0) {
-        return log_error_and_cleanup_sdl("Unable to initialize SDL");
+        return log_sdl_error_and_cleanup_sdl("Unable to initialize SDL");
     }
 
     sdl.performance_frequency = SDL_GetPerformanceFrequency();
@@ -72,16 +80,20 @@ int main(int argc, char **argv)
             SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 640, 480,
             0);
     if (!sdl.window) {
-        return log_error_and_cleanup_sdl("Unable to create window");
+        return log_sdl_error_and_cleanup_sdl("Unable to create window");
     }
 
     sdl.renderer = SDL_CreateRenderer(sdl.window, -1,
             SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
     if (!sdl.renderer) {
-        return log_error_and_cleanup_sdl("Unable to create renderer");
+        return log_sdl_error_and_cleanup_sdl("Unable to create renderer");
     }
 
     SDL_RenderSetLogicalSize(sdl.renderer, 320, 240);
+
+    if (!setup_input()) {
+        return log_error_and_cleanup_sdl("Error setting up input");
+    }
 
     if (!setup_game()) {
         return log_error_and_cleanup_sdl("Error setting up game");
@@ -124,6 +136,8 @@ int main(int argc, char **argv)
 
         SDL_SetRenderDrawColor(sdl.renderer, 64, 128, 255, SDL_ALPHA_OPAQUE);
         SDL_RenderClear(sdl.renderer);
+
+        update_input();
 
         if (!update_game()) {
             running = false;
