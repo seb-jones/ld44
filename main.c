@@ -1,11 +1,3 @@
-/* TODO
- * [DONE] Limit Framerate 
- * [DONE] Load and Render an image
- * [DONE] Load and Render a bitmap font
- *
- * Set up an Input system
- */
-
 #include <assert.h>
 #include <stdbool.h>
 #include <stdio.h>

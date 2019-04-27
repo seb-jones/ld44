@@ -61,6 +61,14 @@ bool setup_game()
 bool update_game()
 {
     if (displaying_event) {
+        if (key_just_down(a_key)) {
+            displaying_event->choice_a.callback();
+            displaying_event = NULL;
+        }
+        else if (key_just_down(b_key)) {
+            displaying_event->choice_b.callback();
+            displaying_event = NULL;
+        }
     }
     else {
         minute_timer += elapsed_seconds;
