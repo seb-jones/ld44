@@ -63,6 +63,11 @@ void set_hex_color(u32 color)
     SDL_SetRenderDrawColor(sdl.renderer, r, g, b, a);
 }
 
+double inverse_lerp_int(int a, int b, int t)
+{
+    return (double)(t - a) / (double)(b - a);
+}
+
 u8 lerp_u8(u8 a, u8 b, double t)
 {
     return a + (u8)((double)(b - a) * t);

@@ -51,10 +51,15 @@ void draw_sky()
 
     double t = (double)(hour - sky_color->start_hour) /
         (double)(next_sky_color->start_hour - sky_color->start_hour);
-    SDL_Log("%f", t);
 
     set_hex_color(lerp_color(sky_color->color, next_sky_color->color, t));
     draw_rectangle(0, 0, render_width, render_height);
+
+    if (hour >= sunrise && hour <= sunset) {
+        SDL_Log("%f", inverse_lerp_int(sunrise, sunset, hour));
+        sun->x = (int)(inverse_lerp_int(sunrise, sunset, hour) *
+                (double)(((render_width * 2)) / 24)) * sun->width;
+    }
 
     // Sun
     draw_sprite(sun);

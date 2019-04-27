@@ -16,3 +16,6 @@ int     minute = 58;
 int     food = 1;
 int     bandages = 0;
 int     money = 5;
+
+int     sunrise = 6;
+int     sunset  = 18;
