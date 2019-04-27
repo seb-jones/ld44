@@ -12,6 +12,8 @@ Texture *load_bitmap(const char *filename)
     if (!surface)
         return NULL;
 
+    SDL_SetColorKey(surface, SDL_TRUE, SDL_MapRGB(surface->format, 0xFF, 0x00, 0xFF));
+
     Texture *texture = malloc(sizeof(*texture));
     texture->handle = SDL_CreateTextureFromSurface(sdl.renderer, surface);
     texture->width = surface->w;

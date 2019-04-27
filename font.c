@@ -41,6 +41,9 @@ void draw_glyph(Font *font, char c, int x, int y)
 
         source.x *= font->glyph_width + 1;
         source.y *= font->glyph_height + 1;
+
+        source.x += 1;
+        source.y += 1;
     }
 
     SDL_Rect destination = { x, y, font->glyph_width, font->glyph_height };
