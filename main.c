@@ -33,8 +33,8 @@ SDLGlobals;
 // Global Variables
 SDLGlobals  sdl = {0};
 
-#define TEMPORARY_STRING_SIZE 1024
-char temporary_string[1024];
+#define TEMPORARY_STRING_SIZE 5012
+char *temporary_string;
 
 int render_width = 320;
 int render_height = 240;
@@ -96,6 +96,8 @@ int main(int argc, char **argv)
     }
 
     SDL_RenderSetLogicalSize(sdl.renderer, render_width, render_height);
+
+    temporary_string = malloc(TEMPORARY_STRING_SIZE);
 
     if (!setup_input()) {
         return log_error_and_cleanup_sdl("Error setting up input");
