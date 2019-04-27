@@ -95,7 +95,7 @@ bool update_game()
             if (minute >= 60) {
                 ++hour;
 
-                show_event(&events[2]);
+                show_event(get_random_event());
 
                 distance_left -= miles_per_hour;
 

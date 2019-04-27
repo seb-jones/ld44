@@ -2,6 +2,7 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 
 #include <SDL2/SDL.h>
 
@@ -68,6 +69,8 @@ u64 microtime()
 
 int main(int argc, char **argv)
 {
+    srand(time(0));
+
     if (SDL_Init(SDL_INIT_VIDEO|SDL_INIT_AUDIO) != 0) {
         return log_sdl_error_and_cleanup_sdl("Unable to initialize SDL");
     }

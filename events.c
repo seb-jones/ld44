@@ -13,6 +13,7 @@ typedef struct Event
     Choice choice_b;
     bool (*condition)();
     char  *bargain_name;
+    bool   seen;
 }
 Event;
 
@@ -29,9 +30,14 @@ bool event_conditions_fulfilled()
 
 char *show_event(Event *event)
 {
+    if (event == NULL)
+        return NULL;
+
     displaying_event = event;
+    displaying_event->seen = true;
 }
 
+// TODO change these to snake case
 char *crossTheBridge()
 {
     return "You walk over the bridge";
@@ -100,6 +106,31 @@ Event events[EVENTS_SIZE] = {
         "bargain_bandage"
     },
 };
+
+Event *get_random_event()
+{
+    bool all_events_seen = true; 
+    for (int i = 0; i < EVENTS_SIZE; ++i) {
+        if (!events[i].seen) {
+            all_events_seen = false;
+            break;
+        }
+    }
+
+    if (all_events_seen) {
+        SDL_Log("All events seen.");
+        return NULL;
+    }
+
+    Event *event;
+
+    do {
+        event = &events[rand() % EVENTS_SIZE];
+    }
+    while(event->seen);
+
+    return event;
+}
 
 #define BARGAINS_SIZE 1
 Event bargains[BARGAINS_SIZE] = {
