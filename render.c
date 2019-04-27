@@ -42,3 +42,19 @@ Texture *destroy_texture(Texture *texture)
     free(texture);
     return NULL;
 }
+
+void set_hex_color(u32 color)
+{
+    u8 b = color;
+    u8 g = color >> 8;
+    u8 r = color >> 16;
+    u8 a = color >> 24;
+
+    SDL_SetRenderDrawColor(sdl.renderer, r, g, b, a);
+}
+
+void draw_rectangle(int x, int y, int width, int height)
+{
+    SDL_Rect rectangle = { x, y, width, height };
+    SDL_RenderFillRect(sdl.renderer, &rectangle);
+}

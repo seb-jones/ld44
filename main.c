@@ -36,6 +36,9 @@ SDLGlobals  sdl = {0};
 #define TEMPORARY_STRING_SIZE 1024
 char temporary_string[1024];
 
+int render_width = 320;
+int render_height = 240;
+
 #include "input.c"
 #include "render.c"
 #include "font.c"
@@ -89,7 +92,7 @@ int main(int argc, char **argv)
         return log_sdl_error_and_cleanup_sdl("Unable to create renderer");
     }
 
-    SDL_RenderSetLogicalSize(sdl.renderer, 320, 240);
+    SDL_RenderSetLogicalSize(sdl.renderer, render_width, render_height);
 
     if (!setup_input()) {
         return log_error_and_cleanup_sdl("Error setting up input");
@@ -134,10 +137,10 @@ int main(int argc, char **argv)
 
         if (!running) break;
 
-        SDL_SetRenderDrawColor(sdl.renderer, 64, 128, 255, SDL_ALPHA_OPAQUE);
-        SDL_RenderClear(sdl.renderer);
-
         update_input();
+
+        SDL_SetRenderDrawColor(sdl.renderer, 33, 33, 33, SDL_ALPHA_OPAQUE);
+        SDL_RenderClear(sdl.renderer);
 
         if (!update_game()) {
             running = false;
@@ -152,6 +155,8 @@ int main(int argc, char **argv)
 
         ++fps;
     }
+
+    destroy_game();
 
     cleanup_sdl();
 

@@ -29,6 +29,13 @@ Font *load_bitmap_font(const char *filename, int glyph_width,
     return font;
 }
 
+Font *destroy_font(Font *font)
+{
+    font->texture = destroy_texture(font->texture);
+    free(font);
+    return NULL;
+}
+
 void draw_glyph(Font *font, char c, int x, int y)
 {
     SDL_Rect source = { 0, 0, font->glyph_width, font->glyph_height };
