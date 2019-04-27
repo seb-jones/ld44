@@ -127,8 +127,7 @@ int main(int argc, char **argv)
         while (fps_timer >= 1000000) {
             fps_timer -= 1000000;
 
-            snprintf(temporary_string, TEMPORARY_STRING_SIZE, "FPS: %u DT: %f", fps,
-                    elapsed_seconds);
+            snprintf(temporary_string, TEMPORARY_STRING_SIZE, "FPS: %u", fps);
             SDL_SetWindowTitle(sdl.window, temporary_string);
 
             fps = 0;

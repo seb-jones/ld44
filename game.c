@@ -1,10 +1,27 @@
+typedef struct SkyColor
+{
+    int start_hour;
+    int end_hour;
+    u32 color;
+}
+SkyColor;
+
+#define SKY_COLORS_SIZE 5
+SkyColor sky_colors[SKY_COLORS_SIZE] = {
+    { 6, 9, 0xfffa742d },
+    { 9, 15, 0xff4080ff },
+    { 15, 18, 0xff8a340d },
+    { 18, 24, 0xff000044 },
+    { 0, 6, 0xff000044 },
+};
+
 Sprite *player = 0;
 Sprite *sun = 0;
 Font   *font = 0;
 
 int day = 0;
-int hour = 23;
-int minute = 59;
+int hour = 12;
+int minute = 58;
 double minute_timer = 0;
 
 bool setup_game()
@@ -16,8 +33,6 @@ bool setup_game()
 
     player->x = render_width / 2 - player->width / 2;
     player->y = render_height - player->height * 2;
-    player->color = 0xffffffff;
-    player->alpha = 0x88;
 
     // Sun
     sun = load_sprite("assets/sun.bmp");
@@ -25,6 +40,7 @@ bool setup_game()
         return false;
 
     sun->color = 0xffffff88;
+    sun->alpha = 0xdd;
     sun->x = 250; 
     sun->y = 50;
 
@@ -36,16 +52,18 @@ bool setup_game()
     return true;
 }
 
+#define ONE_SECOND 0.01
+
 // Returns false when the program should end
 bool update_game()
 {
     minute_timer += elapsed_seconds;
-    while(minute_timer >= 1.0) {
+    while (minute_timer >= ONE_SECOND) {
         ++minute;
 
         if (minute >= 60) {
             ++hour;
-            
+
             if (hour >= 24) {
                 hour = 0;
 
@@ -54,12 +72,21 @@ bool update_game()
 
             minute = 0;
         }
-        minute_timer -= 1.0;
+        minute_timer -= ONE_SECOND;
     }
 
     // Sky
-    set_hex_color(0xff4080ff);
-    draw_rectangle(0, 0, render_width, render_height);
+    {
+        u32 sky_color = 0xffff00ff;
+        for (int i = 0; i < SKY_COLORS_SIZE; ++i) {
+            if (hour >= sky_colors[i].start_hour && hour < sky_colors[i].end_hour) {
+                sky_color = sky_colors[i].color;
+            }
+        }
+
+        set_hex_color(sky_color);
+        draw_rectangle(0, 0, render_width, render_height);
+    }
 
     // Sun
     draw_sprite(sun);
@@ -71,7 +98,7 @@ bool update_game()
     // Player
     draw_sprite(player);
 
-    // Resources
+    // Text
     snprintf(temporary_string, TEMPORARY_STRING_SIZE, "Day: %i | Time %02i:%02i", day, hour, minute);
     draw_string(font, temporary_string, 2, 2);
 
