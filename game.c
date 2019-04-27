@@ -112,7 +112,8 @@ bool update_game()
     draw_string(font, temporary_string, 2, 2);
 
     if (displaying_event) {
-        draw_string(font, displaying_event->label, 2, 50);
+        draw_wrapped_string(font, displaying_event->label, 20, 100, 
+                render_width - 40);
     }
 
     return true;

@@ -6,6 +6,8 @@ typedef struct Font
     int width_in_glyphs;
     int height_in_glyphs;
     char first_character;
+    int kerning;
+    int line_spacing;
 }
 Font;
 
@@ -25,6 +27,8 @@ Font *load_bitmap_font(const char *filename, int glyph_width,
     font->width_in_glyphs = width_in_glyphs;
     font->height_in_glyphs = height_in_glyphs;
     font->first_character = first_character;
+    font->kerning = 1;
+    font->line_spacing = 3;
 
     return font;
 }
@@ -61,12 +65,10 @@ void draw_string(Font *font, const char *string, int x, int y)
 {
     int glyph_x = x;
     int glyph_y = y;
-    int kerning = 1;
-    int line_spacing = 3;
 
     while (*string) {
         if (*string == '\n') {
-            glyph_y += font->glyph_height + line_spacing;
+            glyph_y += font->glyph_height + font->line_spacing;
             glyph_x = x;
         }
         else if (*string == '\t') {
@@ -74,9 +76,37 @@ void draw_string(Font *font, const char *string, int x, int y)
         }
         else {
             draw_glyph(font, *string, glyph_x, glyph_y);
-            glyph_x += font->glyph_width + kerning;
+            glyph_x += font->glyph_width + font->kerning;
         }
 
         ++string;
     }
+}
+
+void draw_wrapped_string(Font *font, const char *string, int x, int y, int max_width)
+{
+    strncpy(temporary_string, string, TEMPORARY_STRING_SIZE);
+    temporary_string[TEMPORARY_STRING_SIZE - 1] = '\0';
+
+    char *str = temporary_string;
+    char *last_space = str;
+
+    int width = 0;
+
+    while (*str) {
+        if (*str == ' ') {
+            last_space = str;
+        }
+
+        width += font->glyph_width + font->kerning;
+
+        if (width > max_width) {
+            *last_space = '\n';
+            width = 0;
+        }
+
+        ++str;
+    }
+
+    draw_string(font, temporary_string, x, y);
 }
