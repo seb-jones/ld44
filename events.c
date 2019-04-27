@@ -1,7 +1,7 @@
 typedef struct Choice
 {
     char    *label;
-    char * (*callback)();
+    char    *(*callback)();
 }
 Choice;
 
@@ -11,7 +11,7 @@ typedef struct Event
     char  *label;
     Choice choice_a;
     Choice choice_b;
-    bool (*condition)();
+    bool   (*condition)();
     char  *bargain_name;
     bool   seen;
 }
@@ -38,43 +38,43 @@ char *show_event(Event *event)
 }
 
 // TODO change these to snake case
-char *crossTheBridge()
+char *cross_the_bridge()
 {
     return "You walk over the bridge";
 }
 
-char *findAnotherWay()
+char *find_another_way()
 {
     return "You find another way to cross the creek";
 }
 
-char *talkToPriest()
+char *talk_to_priest()
 {
     return "You talk to the priest";
 }
 
-char *ignorePriest()
+char *ignore_priest()
 {
     return "You ignore the priest";
 }
 
-bool checkForBandage()
+bool check_for_bandages()
 {
     return bandages > 0;
 }
 
-char *applyBandage()
+char *apply_bandages()
 {
     --bandages;
     return "You apply a bandage to the leg.";
 }
 
-char *ignoreWound()
+char *ignore_wound()
 {
     return "You leave the wound untreated.";
 }
 
-char *bargainBandage()
+char *bargain_bandage()
 {
     return "You sell the stars in the sky for a healed wound.";
 }
@@ -84,25 +84,25 @@ Event events[EVENTS_SIZE] = {
     {
         "creek",
         "You arrive at a creek. There is a poorly maintained bridge.",
-        { "Cross the bridge",  crossTheBridge, },
-        { "Find another way",  findAnotherWay, },
+        { "Cross the bridge",  cross_the_bridge, },
+        { "Find another way",  find_another_way, },
         NULL,
         NULL,
     },
     {
         "priest",
         "You encounter a travelling priest.",
-        { "Talk to him",  talkToPriest, },
-        { "Ignore him",  ignorePriest, },
+        { "Talk to him",  talk_to_priest, },
+        { "Ignore him",  ignore_priest, },
         NULL,
         NULL,
     },
     {
         "minor_injury",
         "You cut your leg on a sharp rock.",
-        { "Apply a bandage",  applyBandage, },
-        { "Ignore the wound",  ignoreWound, },
-        checkForBandage,
+        { "Apply a bandage",  apply_bandages, },
+        { "Ignore the wound",  ignore_wound, },
+        check_for_bandages,
         "bargain_bandage"
     },
 };
@@ -124,6 +124,7 @@ Event *get_random_event()
 
     Event *event;
 
+    // TODO make a shuffled list at the start and use that to track seen
     do {
         event = &events[rand() % EVENTS_SIZE];
     }
@@ -137,8 +138,8 @@ Event bargains[BARGAINS_SIZE] = {
     {
         "bargain_bandage",
         "I can heal these wounds... all I ask in return is a mere trifle... the stars in your sky.",
-        { "Let him heal the wound",  bargainBandage, },
-        { "Ignore him",  ignoreWound, },
+        { "Let him heal the wound",  bargain_bandage, },
+        { "Ignore him",  ignore_wound, },
         NULL,
         NULL,
     },
