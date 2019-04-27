@@ -44,6 +44,7 @@ int render_height = 240;
 #include "render.c"
 #include "font.c"
 #include "sprite.c"
+#include "events.c"
 #include "game.c"
 
 void cleanup_sdl()

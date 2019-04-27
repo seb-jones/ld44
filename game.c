@@ -15,17 +15,17 @@ SkyColor sky_colors[SKY_COLORS_SIZE] = {
     { 0, 6, 0xff000044 },
 };
 
-int day = 0;
-int hour = 12;
-int minute = 58;
-double minute_timer = 0;
-double distance_left = 100.0;
-double miles_per_hour = 1.0;
+double  distance_left = 100.0;
+double  miles_per_hour = 1.0;
+double  minute_timer = 0;
+int     day = 0;
+int     hour = 12;
+int     minute = 58;
+Event  *displaying_event = &events[0];
 
 Sprite *player = 0;
 Sprite *sun = 0;
 Font   *font = 0;
-
 
 bool setup_game()
 {
@@ -60,24 +60,28 @@ bool setup_game()
 // Returns false when the program should end
 bool update_game()
 {
-    minute_timer += elapsed_seconds;
-    while (minute_timer >= ONE_SECOND) {
-        ++minute;
+    if (displaying_event) {
+    }
+    else {
+        minute_timer += elapsed_seconds;
+        while (minute_timer >= ONE_SECOND) {
+            ++minute;
 
-        if (minute >= 60) {
-            ++hour;
+            if (minute >= 60) {
+                ++hour;
 
-            distance_left -= miles_per_hour;
+                distance_left -= miles_per_hour;
 
-            if (hour >= 24) {
-                hour = 0;
+                if (hour >= 24) {
+                    hour = 0;
 
-                ++day;
+                    ++day;
+                }
+
+                minute = 0;
             }
-
-            minute = 0;
+            minute_timer -= ONE_SECOND;
         }
-        minute_timer -= ONE_SECOND;
     }
 
     // Sky
@@ -106,6 +110,10 @@ bool update_game()
     // Text
     snprintf(temporary_string, TEMPORARY_STRING_SIZE, "Day %i | Time %02i:%02i\n%.0f miles left to town", day, hour, minute, distance_left);
     draw_string(font, temporary_string, 2, 2);
+
+    if (displaying_event) {
+        draw_string(font, displaying_event->label, 2, 50);
+    }
 
     return true;
 }
