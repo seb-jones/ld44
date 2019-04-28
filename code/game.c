@@ -227,16 +227,20 @@ bool update_game()
         draw_texture(left_eye_gone_overlay, 0, 0);
 
     // Text
-    snprintf(temporary_string, TEMPORARY_STRING_SIZE, "Day %i | Time %02i:%02i\n%.0f miles left to town\nFood - %i | Bandages - %i | Money - %i", day, hour, minute, distance_left, food, bandages, money);
-    draw_string(font, temporary_string, 2, 2);
+    snprintf(temporary_string, TEMPORARY_STRING_SIZE, "Day %i | Time %02i:%02i\n%.0f miles left\nFood - %i | Bandages - %i | Money - %i", day, hour, minute, distance_left, food, bandages, money);
+
+    int next_y = draw_string(font, temporary_string, 2, 2);
+    next_y += font->glyph_height * 2;
+
 
     if (displaying_outcome) {
-        draw_wrapped_string(font, displaying_outcome, 20, 100, 
+        next_y = draw_wrapped_string(font, displaying_outcome, 20, next_y, 
                 render_width - 40);
     }
     else if (displaying_event) {
-        draw_wrapped_string(font, displaying_event->label, 20, 100, 
+        next_y = draw_wrapped_string(font, displaying_event->label, 20, next_y, 
                 render_width - 40);
+        next_y += font->glyph_height;
 
         if (!event_conditions_fulfilled()) {
             font->color = 0xff888888;
@@ -245,14 +249,15 @@ bool update_game()
         snprintf(temporary_string, TEMPORARY_STRING_SIZE,
                 "1 - %s", displaying_event->choice_a.label);
 
-        draw_string(font, temporary_string, 20, 130);
+        next_y = draw_string(font, temporary_string, 20, next_y);
+        next_y += font->glyph_height;
 
         font->color = 0xffffffff;
 
         snprintf(temporary_string, TEMPORARY_STRING_SIZE,
                 "2 - %s", displaying_event->choice_b.label);
 
-        draw_string(font, temporary_string, 20, 145);
+        draw_string(font, temporary_string, 20, next_y);
     }
 
     return true;

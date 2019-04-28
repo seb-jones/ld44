@@ -68,7 +68,8 @@ void draw_glyph(Font *font, char c, int x, int y)
     SDL_RenderCopy(sdl.renderer, font->texture->handle, &source, &destination);
 }
 
-void draw_string(Font *font, const char *string, int x, int y)
+// Returns the y position of next line below the drawn string
+int draw_string(Font *font, const char *string, int x, int y)
 {
     int glyph_x = x;
     int glyph_y = y;
@@ -88,9 +89,11 @@ void draw_string(Font *font, const char *string, int x, int y)
 
         ++string;
     }
+
+    return glyph_y + font->glyph_height + font->line_spacing;
 }
 
-void draw_wrapped_string(Font *font, const char *string, int x, int y, int max_width)
+int draw_wrapped_string(Font *font, const char *string, int x, int y, int max_width)
 {
     strncpy(temporary_string, string, TEMPORARY_STRING_SIZE);
     temporary_string[TEMPORARY_STRING_SIZE - 1] = '\0';
@@ -115,5 +118,5 @@ void draw_wrapped_string(Font *font, const char *string, int x, int y, int max_w
         ++str;
     }
 
-    draw_string(font, temporary_string, x, y);
+    return draw_string(font, temporary_string, x, y);
 }
