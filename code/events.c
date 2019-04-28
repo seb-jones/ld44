@@ -28,10 +28,10 @@ bool event_conditions_fulfilled()
     return displaying_event->condition();
 }
 
-char *show_event(Event *event)
+void show_event(Event *event)
 {
-    if (event == NULL)
-        return NULL;
+	if (event == NULL)
+		return;
 
     displaying_event = event;
 }

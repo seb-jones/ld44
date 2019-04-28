@@ -31,6 +31,8 @@ Sprite *load_sprite(const char *filename)
     sprite->height = sprite->texture->height;
     sprite->visible = true;
     sprite->vel_x = 0;
+
+	return sprite;
 }
 
 void update_sprite(Sprite *sprite)
