@@ -56,7 +56,6 @@ void draw_sky()
     draw_rectangle(0, 0, render_width, render_height);
 
     if (hour >= sunrise && hour <= sunset) {
-        SDL_Log("%f", inverse_lerp_int(sunrise, sunset, hour));
         sun->x = (int)(inverse_lerp_int(sunrise, sunset, hour) *
                 (double)(((render_width * 2)) / 24)) * sun->width;
     }

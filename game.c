@@ -2,9 +2,10 @@ Sprite *player = 0;
 Sprite *devil = 0;
 Font   *font = 0;
 
-char *displaying_outcome = NULL;
+char *displaying_outcome = "You hoist your bag onto you back, filled with what little food and supplies you have, and set out across the desert. You are sure you will find love and fortune on the other side, if you can only endure this trial...";
 
 double  minute_timer = 0;
+bool    endgame = false;
 
 bool setup_game()
 {
@@ -41,7 +42,18 @@ bool setup_game()
 // Returns false when the program should end
 bool update_game()
 {
-    if (displaying_event) {
+    if (endgame) {
+        draw_wrapped_string(font, "Endgame text here", 20, 100, 
+                render_width - 40);
+
+        if (key_just_down(okay_key)) {
+            return false;
+        }
+
+        return true;
+    }
+
+    if (displaying_event || displaying_outcome) {
         if (displaying_outcome) {
             if (key_just_down(okay_key)) {
                 displaying_outcome = NULL;
@@ -70,9 +82,14 @@ bool update_game()
             if (minute >= 60) {
                 ++hour;
 
-                //show_event(get_random_event());
-
                 distance_left -= miles_per_hour;
+
+                if (distance_left <= 0) {
+                    endgame = true;
+                    return true;
+                }
+
+                show_event(get_random_event());
 
                 if (hour >= 24) {
                     hour = 0;
