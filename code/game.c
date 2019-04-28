@@ -137,10 +137,13 @@ bool update_game()
                 }
 
                 if (time_equals(1, 1, 60)) {
-                    show_event(get_event_by_name("colors_for_health"));
+                    show_event(get_event_by_name("money"));
+                    /*
                     bargaining = true;
                     devil->visible = true;
+                    */
                 }
+
                 /*
                 else {
                     show_event(get_event_by_name("minor_injury"));
@@ -201,9 +204,7 @@ bool update_game()
                 render_width - 40);
     }
     else if (displaying_event) {
-        snprintf(temporary_string, TEMPORARY_STRING_SIZE,
-                "%s Do you...", displaying_event->label);
-        draw_wrapped_string(font, temporary_string, 20, 100, 
+        draw_wrapped_string(font, displaying_event->label, 20, 100, 
                 render_width - 40);
 
         if (!event_conditions_fulfilled()) {
@@ -228,5 +229,5 @@ bool update_game()
 
 void destroy_game()
 {
-    // TODO
+    // TODO destroy assets
 }

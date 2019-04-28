@@ -1,5 +1,4 @@
 typedef struct Choice
-
 {
     char    *label;
     char    *(*callback)();
@@ -36,25 +35,40 @@ char *show_event(Event *event)
     displaying_event = event;
 }
 
-// TODO change these to snake case
-char *cross_the_bridge()
+char *ford_the_river()
 {
-    return "You walk over the bridge";
+    bandages = 0;
+    distance_left -= 5;
+    return "When you reach the other side of the river, you find that your medical supplies are soaked and will no longer be usable.";
 }
 
-char *find_another_way()
+char *find_another_way_across_the_river()
 {
-    return "You find another way to cross the creek";
+    return "You find another way to cross the river.";
 }
 
-char *talk_to_priest()
+char *help_soldier()
 {
-    return "You talk to the priest";
+    --bandages;
+    ++food;
+    return "The soldier is thankful, and shares some of his food rations with you.";
+}
+
+char *ignore_soldier()
+{
+    return "You ignore the soldier.";
+}
+
+char *feed_priest()
+{
+    --food;
+    distance_left -= 5;
+    return "You give the priest some food. He is gratious and tells you of a shortcut that he knows.";
 }
 
 char *ignore_priest()
 {
-    return "You ignore the priest";
+    return "You ignore the priest.";
 }
 
 bool check_for_bandages()
@@ -62,9 +76,29 @@ bool check_for_bandages()
     return bandages > 0;
 }
 
+bool check_for_food()
+{
+    return food > 0;
+}
+
+bool check_for_5_money()
+{
+    return money >= 5;
+}
+
+bool check_for_10_money()
+{
+    return money >= 10;
+}
+
 char *apply_bandages()
 {
     --bandages;
+
+    if (miles_per_hour < BASE_MILES_PER_HOUR) {
+        miles_per_hour = BASE_MILES_PER_HOUR;
+    }
+
     bleeding = false;
     return "You apply a bandage to the leg.";
 }
@@ -77,6 +111,111 @@ char *ignore_wound()
         bleeding = true;
 
     return "You leave the wound untreated.";
+}
+
+char *ignore_trap_wound()
+{
+    miles_per_hour = 0.5;
+    ignore_wound();
+    return "The untreated leg makes it harder to walk";
+}
+
+char *accept_merchant()
+{
+    money -= 5;
+    ++food;
+    return "You trade 5 coins for a piece of food.";
+}
+
+char *decline_merchant()
+{
+    return "You politely decline.";
+}
+
+char *accept_doctor()
+{
+    money -= 10;
+    bleeding = false;
+
+    if (miles_per_hour < BASE_MILES_PER_HOUR) 
+        miles_per_hour = BASE_MILES_PER_HOUR;
+
+    return "You trade 10 coins for the Doctor's services.";
+}
+
+char *investigate_vultures()
+{
+    ++food;
+    distance_left += 5;
+    return "You find a recently-dead animal that is in edible condition. However, the detour ends up adding distance to your journey.";
+}
+
+char *ignore_vultures()
+{
+    return "You ignore the vultures and move along.";
+}
+
+char *eat_mushrooms()
+{
+    ++food;
+    bleeding = true;
+    return "The mushrooms satisfy your hunger, but make you feel ill.";
+}
+
+char *ignore_mushrooms()
+{
+    return "You leave the mushrooms as they are.";
+}
+
+char *decline_doctor()
+{
+    return "You politely decline.";
+}
+
+char *fight_bandits()
+{
+    money = 0;
+    ignore_wound();
+    return "The bandits give you a severe beating and take your money.";
+}
+
+char *evade_bandits()
+{
+    distance_left += 10;
+    return "You manage to evade the bandits, but it adds distance to your journey.";
+}
+
+char *take_food()
+{
+    ++food;
+    return "You take the food.";
+}
+
+char *leave_food()
+{
+    return "You leave the food where it is.";
+}
+
+char *take_bandages()
+{
+    ++bandages;
+    return "You take the bandages.";
+}
+
+char *leave_bandages()
+{
+    return "You leave the bandages where they are.";
+}
+
+char *take_money()
+{
+    ++money;
+    return "You take the money.";
+}
+
+char *leave_money()
+{
+    return "You leave the money where it is.";
 }
 
 char *bargain_bandage()
@@ -104,32 +243,105 @@ char *hear_out_color_for_health()
     return "bargain_colors_for_health";
 }
 
-#define EVENTS_SIZE 6
+#define EVENTS_SIZE 15
 Event events[EVENTS_SIZE] = {
     {
-        "creek",
-        "You arrive at a creek. There is a poorly maintained bridge.",
-        { "Cross the bridge",  cross_the_bridge, },
-        { "Find another way",  find_another_way, },
+        "river",
+        "You arrive at a river. It is running fast, but fording it would provide a considerable saving of time.",
+        { "Ford the river",  ford_the_river, },
+        { "Find another way",  find_another_way_across_the_river, },
         NULL,
         true,
     },
     {
         "priest",
-        "You encounter a travelling priest.",
-        { "Talk to him",  talk_to_priest, },
+        "You encounter a travelling priest. He looks hungry.",
+        { "Feed him",  feed_priest, },
         { "Ignore him",  ignore_priest, },
+        check_for_food,
+        true,
+    },
+    {
+        "soldier",
+        "You find a gravely-wounded soldier lying in the shade.",
+        { "Bandage his wound",  help_soldier, },
+        { "Ignore him",  ignore_soldier, },
+        check_for_bandages,
+        true,
+    },
+    {
+        "trap",
+        "You get your leg caught in a trap.",
+        { "Apply a bandage",  apply_bandages, },
+        { "Ignore the wound",  ignore_trap_wound, },
+        check_for_bandages,
+        true,
+    },
+    {
+        "merchant",
+        "A travelling merchant offers you some food for 5 coins.",
+        { "Accept",  accept_merchant, },
+        { "Decline",  decline_merchant, },
+        check_for_5_money,
+        true,
+    },
+    {
+        "doctor",
+        "You meet a doctor on his way to town. He offers to cure all your ills for 10 coins.",
+        { "Accept",  accept_doctor, },
+        { "Decline",  decline_doctor, },
+        check_for_10_money,
+        true,
+    },
+    {
+        "vultures",
+        "You spot some vultures on the horizon.",
+        { "Investigate",  investigate_vultures, },
+        { "Ignore Them",  ignore_vultures, },
         NULL,
         true,
     },
     {
-        "minor_injury",
-        "You cut your leg on a sharp rock.",
-        { "Apply a bandage",  apply_bandages, },
-        { "Ignore the wound",  ignore_wound, },
-        check_for_bandages,
+        "mushrooms",
+        "You find some curious mushrooms.",
+        { "Eat them",  eat_mushrooms, },
+        { "Ignore Them",  ignore_mushrooms, },
+        NULL,
         true,
     },
+    {
+        "bandits",
+        "A group of bandits approach.",
+        { "Stand your ground",  fight_bandits, },
+        { "Evade them",  evade_bandits, },
+        NULL,
+        true,
+    },
+    {
+        "food",
+        "You find a can of food.",
+        { "Take it.", take_food },
+        { "Leave it.", leave_food },
+        NULL,
+        true,
+    },
+    {
+        "bandages",
+        "You find some bandages.",
+        { "Take them.", take_bandages },
+        { "Leave them.", leave_bandages },
+        NULL,
+        true,
+    },
+    {
+        "money",
+        "You find some money.",
+        { "Take it.", take_money },
+        { "Leave it.", leave_money },
+        NULL,
+        true,
+    },
+
     {
         "eye_for_food",
         "A mysterious man appears. He wears a fine suit and offers a proposal.",
