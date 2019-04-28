@@ -90,13 +90,7 @@ int main(int argc, char **argv)
 
     sdl.performance_frequency = SDL_GetPerformanceFrequency();
 
-#ifdef NDEBUG
     int window_x = SDL_WINDOWPOS_CENTERED;
-#else
-    SDL_Rect display_bounds;
-    SDL_GetDisplayBounds(0, &display_bounds);
-    int window_x = display_bounds.w / 2;
-#endif
 
     sdl.window = SDL_CreateWindow("Test", 
             window_x, SDL_WINDOWPOS_CENTERED, 
