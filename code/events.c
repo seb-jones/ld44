@@ -13,6 +13,7 @@ typedef struct Event
     Choice choice_b;
     bool   (*condition)();
     bool   allow_random_selection;
+    bool   seen;
 }
 Event;
 
@@ -88,7 +89,7 @@ bool check_for_5_money()
 
 bool can_pay_doctor()
 {
-    return money >= 10 && (bleeding || miles_per_hour < BASE_MILES_PER_HOUR);
+    return money >= 5 && (bleeding || miles_per_hour < BASE_MILES_PER_HOUR);
 }
 
 char *apply_bandages()
@@ -134,13 +135,13 @@ char *decline_merchant()
 
 char *accept_doctor()
 {
-    money -= 10;
+    money -= 5;
     bleeding = false;
 
     if (miles_per_hour < BASE_MILES_PER_HOUR) 
         miles_per_hour = BASE_MILES_PER_HOUR;
 
-    return "You trade 10 coins for the Doctor's services.";
+    return "You trade 5 coins for the Doctor's services.";
 }
 
 char *investigate_vultures()
@@ -209,7 +210,7 @@ char *leave_bandages()
 
 char *take_money()
 {
-    ++money;
+    money += 5;
     return "You take the money.";
 }
 
@@ -256,7 +257,7 @@ Event events[EVENTS_SIZE] = {
     {
         "priest",
         "You encounter a travelling priest. He looks hungry.",
-        { "Feed him",  feed_priest, },
+        { "Give him some food",  feed_priest, },
         { "Ignore him",  ignore_priest, },
         check_for_food,
         true,
@@ -287,7 +288,7 @@ Event events[EVENTS_SIZE] = {
     },
     {
         "doctor",
-        "You meet a doctor on his way to town. He offers to cure all your ills for 10 coins.",
+        "You meet a doctor on his way to town. He offers to cure all your ills for 5 coins.",
         { "Accept",  accept_doctor, },
         { "Decline",  decline_doctor, },
         can_pay_doctor,
@@ -370,13 +371,28 @@ Event events[EVENTS_SIZE] = {
 
 Event *get_random_event()
 {
+    bool all_seen = true;
+    for (int i = 0; i < EVENTS_SIZE; ++i) {
+        if (!events[i].seen) {
+            all_seen = false;
+        }
+    }
+
+    if (all_seen) {
+        SDL_Log("All events seen. Resetting.");
+        for (int i = 0; i < EVENTS_SIZE; ++i) {
+            events[i].seen = false;
+        }
+    }
+
     Event *event;
 
-    // TODO make a shuffled list at the start and use that to track seen
     do {
         event = &events[rand() % EVENTS_SIZE];
     }
-    while(!event->allow_random_selection);
+    while(!event->allow_random_selection || event->seen);
+
+    event->seen = true;
 
     return event;
 }

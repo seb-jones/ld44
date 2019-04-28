@@ -2,6 +2,7 @@ Sprite  *player = NULL;
 Sprite  *devil  = NULL;
 Sprite  *blood  = NULL;
 Font    *font   = NULL;
+
 Texture *left_eye_gone_overlay       = NULL;
 Texture *player_monochrome           = NULL;
 Texture *player_reg_frame            = NULL;
@@ -248,9 +249,9 @@ bool update_game()
     }
 
     if (color_gone) {
-        if (hour % 2)
+        if (minute % 59)
             player->texture = player_alt_frame_monochrome;
-        else
+        else if (minute == 29)
             player->texture = player_monochrome;
 
 
@@ -299,7 +300,7 @@ bool update_game()
 
     if (displaying_outcome) {
         next_y = draw_wrapped_string(font, displaying_outcome, 20, next_y, 
-                render_width - 40);
+                render_width - 60);
     }
     else if (displaying_event) {
         next_y = draw_wrapped_string(font, displaying_event->label, 20, next_y, 
