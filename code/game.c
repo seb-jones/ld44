@@ -218,7 +218,7 @@ bool update_game()
                     bargaining = true;
                     devil->visible = true;
                 }
-                else if (hour % 6 == 0) {
+                else if ((hour + 3) % 6 == 0) {
                     show_event(get_random_event());
                 }
 
