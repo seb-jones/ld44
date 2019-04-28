@@ -15,7 +15,7 @@ This was the interpretation of the theme that I had in mind going into the compo
 ## Installation
 
 ### Windows
-Simply download one of the builds, extract the zip file, and run the executable.
+Simply download one of the [builds](https://github.com/seb-jones/ld44/releases/tag/1.0), extract the zip file, and run the executable.
 
 ### Linux
 Clone this repo into a location of your choice.
