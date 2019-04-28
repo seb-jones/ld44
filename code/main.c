@@ -166,7 +166,7 @@ int main(int argc, char **argv)
             toggle_fullscreen();
         }
 
-        set_hex_color(0xff4d4222);
+        set_hex_color(0xff1f1f1f);
         SDL_RenderClear(sdl.renderer);
 
         if (!update_game()) {

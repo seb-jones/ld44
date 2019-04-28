@@ -101,8 +101,47 @@ bool update_game()
     }
 
     if (endgame) {
-        draw_wrapped_string(font, "Endgame text here", 20, 100, 
-                render_width - 40);
+        int next_y = 8;
+
+        if (stars_gone) {
+            next_y = draw_wrapped_string(font, 
+                    "The stars in the sky no longer shine.", 8, 
+                    next_y, render_width - 16);
+            next_y += font->glyph_height;
+        }
+
+        if (left_eye_gone) {
+            next_y = draw_wrapped_string(font, 
+                    "Your left eye no longer serves a purpose.", 8, 
+                    next_y, render_width - 16);
+            next_y += font->glyph_height;
+        }
+
+        if (color_gone) {
+            next_y = draw_wrapped_string(font, 
+                    "The world is no longer adourned with colour.", 8, 
+                    next_y, render_width - 16);
+            next_y += font->glyph_height;
+        }
+
+        if (stars_gone || left_eye_gone || color_gone) {
+            next_y += font->glyph_height * 2;
+
+            next_y = draw_wrapped_string(font, 
+                    "You still possess existence, but perhaps you have sold part of your life in order to maintain that possession...",
+                    8, next_y, render_width - 16);
+            next_y += font->glyph_height * 3;
+        }
+        else {
+            next_y = draw_wrapped_string(font, 
+                    "You made it intact. Perhaps here you will find a new beginning.", 8, 
+                    next_y, render_width - 16);
+            next_y += font->glyph_height * 3;
+
+            next_y = draw_wrapped_string(font, 
+                    "Perhaps every day is a new beginning...", 8, 
+                    next_y, render_width - 16);
+        }
 
         if (key_just_down(okay_key)) {
             return false;
