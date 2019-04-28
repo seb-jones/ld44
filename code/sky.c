@@ -65,23 +65,27 @@ void draw_sky()
         }
     }
 
-    double t = (double)(hour - sky_color->start_hour) /
-        (double)(next_sky_color->start_hour - sky_color->start_hour);
+
+    int start_minutes = sky_color->start_hour * 60;
+    int end_minutes   = next_sky_color->start_hour * 60;
+    int current_minutes = hour * 60 + minute;
 
     if (hour >= sunrise && hour <= sunset) {
-        double t = inverse_lerp_int(sunrise, sunset, hour);
+        double t = inverse_lerp_int(sunrise * 60, sunset * 60, (hour * 60) + minute);
 
-        sun->x = (int)(t *
-                (double)((((double)render_width * 1.5)) / 24.0)) * sun->width;
+        sun->x = (int)(t * (double)(render_width * 2)) - (render_width / 2);
         sun->y = render_height - 200 + 
            (cos(t * (2.0 * M_PI)) * (double)sun->height * 1.5); 
     }
 
     // Sky Background
-    if (color_gone)
+    if (color_gone) {
         set_hex_color(0xffdddddd);
-    else 
+    }
+    else {
+        double t = inverse_lerp_int(start_minutes, end_minutes, current_minutes);
         set_hex_color(lerp_color(sky_color->color, next_sky_color->color, t));
+    }
 
     draw_rectangle(0, 0, render_width, render_height);
 

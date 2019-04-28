@@ -3,7 +3,7 @@ double elapsed_seconds;
 
 const char *one_key = "1";
 const char *two_key = "2";
-const char *okay_key = "Space";
+const char *okay_key = "Return";
 const char *fullscreen_key = "F11";
 
 // Gameplay
@@ -12,10 +12,10 @@ const char *fullscreen_key = "F11";
 double  distance_left = 90;
 double  miles_per_hour = BASE_MILES_PER_HOUR;
 int     day = 1;
-int     hour = 0;
+int     hour = 7;
 int     minute = 50;
-int     sunrise = 8;
-int     sunset  = 17;
+int     sunrise = 6;
+int     sunset  = 18;
 int     food = 1;
 int     bandages = 1;
 int     money = 5;
