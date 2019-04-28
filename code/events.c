@@ -94,7 +94,12 @@ char *hear_out_eye_for_food()
     return "bargain_eye_for_food";
 }
 
-#define EVENTS_SIZE 4
+char *hear_out_stars_for_speed()
+{
+    return "bargain_stars_for_speed";
+}
+
+#define EVENTS_SIZE 5
 Event events[EVENTS_SIZE] = {
     {
         "creek",
@@ -124,6 +129,14 @@ Event events[EVENTS_SIZE] = {
         "eye_for_food",
         "A mysterious man appears. He wears a fine suit and offers a proposal.",
         { "Hear him out",  hear_out_eye_for_food, },
+        { "Ignore him",  ignore_devil, },
+        NULL,
+        true,
+    },
+    {
+        "stars_for_speed",
+        "A mysterious man appears. He wears a fine suit and offers a proposal.",
+        { "Hear him out",  hear_out_stars_for_speed, },
         { "Ignore him",  ignore_devil, },
         NULL,
         true,
@@ -166,13 +179,28 @@ char *remove_eye_for_food()
     return "You take the knife and cut your left eye from it's socket. The pain is intense, but you are surprised at the lack of bleeding. The man vanishes, leaving behind a plentiful sack of grain.";
 }
 
-#define BARGAINS_SIZE 1
+char *remove_stars_for_speed()
+{
+    miles_per_hour *= 3;
+    stars_gone = true;
+    return "You look up and observe as all the stars in the sky vanish in an instant. When you direct your gaze back to the man, you find he is no where to be seen. However, your legs feel vital, as if they can walk much faster than previously.";
+}
+
+#define BARGAINS_SIZE 2
 Event bargains[BARGAINS_SIZE] = {
     {
         "bargain_eye_for_food",
         "\"I have enough food here to keep you full for life. All I ask in return is a mere trifle... your left eye.\" The man draws a menacing knife from his pocket.",
         { "Take the blade and cut out your eye",  remove_eye_for_food, },
         { "Decline his ridiculous proposal",  decline_devil, },
+        NULL,
+        false,
+    },
+    {
+        "bargain_stars_for_speed",
+        "\"I can make your journey many hours shorter... all I require\" - He gestures upwards - \"is the stars in your sky.",
+        { "Accept his offer",  remove_stars_for_speed, },
+        { "Decline his bizarre proposal",  decline_devil, },
         NULL,
         false,
     },

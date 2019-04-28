@@ -126,12 +126,12 @@ bool update_game()
                     return true;
                 }
 
-                /*
-                if (time_equals(day, hour, minute)) {
-                    show_event(get_event_by_name("eye_for_food"));
+                if (time_equals(1, 1, 60)) {
+                    show_event(get_event_by_name("stars_for_speed"));
                     bargaining = true;
                     devil->visible = true;
                 }
+                /*
                 else {
                     show_event(get_event_by_name("minor_injury"));
                 }
