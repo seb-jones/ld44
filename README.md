@@ -12,7 +12,7 @@ When I first saw the theme, I spent some time thinking and then wrote the follow
 
 This was the interpretation of the theme that I had in mind going into the compo, and hopefully this idea is reflected in the game.
 
-## Usage
+## Installation
 
 ### Windows
 Simply download one of the builds, extract the zip file, and run the executable.
@@ -25,3 +25,8 @@ Install the SDL2 dev package from your system's package manager, or compile it y
 `cd` into the cloned directory and run `make`.
 
 Run `./a.out` to play.
+
+## Usage
+When given options, use the `Number Keys` to choose. Otherwise, use the `Enter Key` to proceed.
+
+`F11` toggles fullscreen mode.
