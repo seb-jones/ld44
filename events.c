@@ -12,8 +12,7 @@ typedef struct Event
     Choice choice_a;
     Choice choice_b;
     bool   (*condition)();
-    char  *bargain_name;
-    bool   seen;
+    bool   allow_random_selection;
 }
 Event;
 
@@ -34,7 +33,6 @@ char *show_event(Event *event)
         return NULL;
 
     displaying_event = event;
-    displaying_event->seen = true;
 }
 
 // TODO change these to snake case
@@ -79,7 +77,17 @@ char *bargain_bandage()
     return "You sell the stars in the sky for a healed wound.";
 }
 
-#define EVENTS_SIZE 3
+char *ignore_devil()
+{
+    return "You ignore the mysterious man.";
+}
+
+char *hear_out_eye_for_food()
+{
+    return "bargain_eye_for_food";
+}
+
+#define EVENTS_SIZE 4
 Event events[EVENTS_SIZE] = {
     {
         "creek",
@@ -87,7 +95,7 @@ Event events[EVENTS_SIZE] = {
         { "Cross the bridge",  cross_the_bridge, },
         { "Find another way",  find_another_way, },
         NULL,
-        NULL,
+        true,
     },
     {
         "priest",
@@ -95,53 +103,71 @@ Event events[EVENTS_SIZE] = {
         { "Talk to him",  talk_to_priest, },
         { "Ignore him",  ignore_priest, },
         NULL,
-        NULL,
+        true,
     },
     {
         "minor_injury",
         "You cut your leg on a sharp rock.",
         { "Apply a bandage",  apply_bandages, },
         { "Ignore the wound",  ignore_wound, },
-        check_for_bandages,
-        "bargain_bandage"
+        NULL,
+        true,
+    },
+    {
+        "eye_for_food",
+        "A mysterious man appears. He wears a fine suit and offers a proposal.",
+        { "Hear him out",  hear_out_eye_for_food, },
+        { "Ignore him",  ignore_devil, },
+        NULL,
+        true,
     },
 };
 
 Event *get_random_event()
 {
-    bool all_events_seen = true; 
-    for (int i = 0; i < EVENTS_SIZE; ++i) {
-        if (!events[i].seen) {
-            all_events_seen = false;
-            break;
-        }
-    }
-
-    if (all_events_seen) {
-        SDL_Log("All events seen.");
-        return NULL;
-    }
-
     Event *event;
 
     // TODO make a shuffled list at the start and use that to track seen
     do {
         event = &events[rand() % EVENTS_SIZE];
     }
-    while(event->seen);
+    while(!event->allow_random_selection);
 
     return event;
+}
+
+Event *get_event_by_name(const char *name)
+{
+    for (int i = 0; i < EVENTS_SIZE; ++i) {
+        if (!strcmp(events[i].name, name)) {
+            return &events[i];
+        }
+    }
+
+    return NULL;
+}
+
+char *decline_devil()
+{
+    return "You decline and quick move along.";
+}
+
+char *remove_eye_for_food()
+{
+    food += 99999;
+    left_eye_gone = true;
+    return "You take the knife and cut your left eye from it's socket. The pain is intense, but you are surprised at the lack of bleeding. The man vanishes, leaving behind a plentiful sack of grain.";
 }
 
 #define BARGAINS_SIZE 1
 Event bargains[BARGAINS_SIZE] = {
     {
-        "bargain_bandage",
-        "I can heal these wounds... all I ask in return is a mere trifle... the stars in your sky.",
-        { "Let him heal the wound",  bargain_bandage, },
-        { "Ignore him",  ignore_wound, },
+        "bargain_eye_for_food",
+        "\"I have enough food here to keep you full for life. All I ask in return is a mere trifle... your left eye.\" The man draws a menacing knife from his pocket.",
+        { "Take the blade and cut out your eye",  remove_eye_for_food, },
+        { "Decline his ridiculous proposal",  decline_devil, },
         NULL,
-        NULL,
+        false,
     },
 };
 

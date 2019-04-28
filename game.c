@@ -6,6 +6,13 @@ char *displaying_outcome = "You hoist your bag onto you back, filled with what l
 
 double  minute_timer = 0;
 bool    endgame = false;
+bool    hearing_proposal = false;
+bool    bargaining = false;
+
+bool time_equals(int _day, int _hour, int _minute)
+{
+    return day == _day && hour == _hour && minute == _minute;
+}
 
 bool setup_game()
 {
@@ -63,14 +70,17 @@ bool update_game()
         }
         else {
             if (event_conditions_fulfilled() && key_just_down(a_key)) {
-                displaying_outcome = displaying_event->choice_a.callback();
+                if (bargaining) {
+                    show_event(get_bargain_by_name(
+                                displaying_event->choice_a.callback()));
+                    bargaining = false;
+                }
+                else {
+                    displaying_outcome = displaying_event->choice_a.callback();
+                }
             }
             else if (key_just_down(b_key)) {
                 displaying_outcome = displaying_event->choice_b.callback();
-            }
-            else if (!event_conditions_fulfilled() && key_just_down(c_key)) {
-                show_event(get_bargain_by_name(displaying_event->bargain_name));
-                devil->visible = true;
             }
         }
     }
@@ -89,7 +99,14 @@ bool update_game()
                     return true;
                 }
 
-                show_event(get_random_event());
+                if (time_equals(day, hour, minute)) {
+                    show_event(get_event_by_name("eye_for_food"));
+                    bargaining = true;
+                    devil->visible = true;
+                }
+                else {
+                    show_event(get_random_event());
+                }
 
                 if (hour >= 24) {
                     hour = 0;
@@ -145,6 +162,7 @@ bool update_game()
 
         draw_string(font, temporary_string, 20, 145);
 
+        /*
         if (!event_conditions_fulfilled()) {
             font->color = 0xffaa1111;
             snprintf(temporary_string, TEMPORARY_STRING_SIZE,
@@ -153,6 +171,7 @@ bool update_game()
             draw_string(font, temporary_string, 20, 160);
             font->color = 0xffffffff;
         }
+        */
     }
 
     return true;
