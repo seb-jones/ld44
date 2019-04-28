@@ -1,5 +1,6 @@
 Sprite  *player = NULL;
 Sprite  *devil  = NULL;
+Sprite  *blood  = NULL;
 Font    *font   = NULL;
 Texture *left_eye_gone_overlay       = NULL;
 Texture *player_monochrome           = NULL;
@@ -48,6 +49,14 @@ bool setup_game()
     devil->x = render_width - devil->width - 20;
     devil->y = render_height - devil->height * 2;
     devil->visible = false;
+
+    blood = load_sprite("assets/blood.bmp");
+    if (!blood)
+        return false;
+
+    blood->color = 0xffff0000;
+    blood->vel_x = -1;
+    blood->visible = false;
 
     left_eye_gone_overlay = load_bitmap("assets/left_eye_gone.bmp");
     if (!left_eye_gone_overlay)
@@ -171,10 +180,13 @@ bool update_game()
             }
             else if (key_just_down(two_key)) {
                 displaying_outcome = displaying_event->choice_b.callback();
+                bargaining = false;
             }
         }
     }
     else {
+        update_sprite(blood);
+
         minute_timer += elapsed_seconds;
         while (minute_timer >= ONE_SECOND) {
             ++minute;
@@ -207,6 +219,12 @@ bool update_game()
                 }
                 else if (hour % 6 == 0) {
                     show_event(get_random_event());
+                }
+
+                if (bleeding && hour % 5 == 0) {
+                    blood->x = player->x;
+                    blood->y = player->y + player->height - blood->height;
+                    blood->visible = true;
                 }
 
                 if (hour >= 24) {
@@ -254,6 +272,13 @@ bool update_game()
         set_hex_color(0xffffd8b0);
 
     draw_rectangle(0, render_height - (player->height + 10), render_width, player->height + 10);
+
+    // Blood
+    if (color_gone) {
+        blood->color = 0xff333333;
+    }
+
+    draw_sprite(blood);
 
     // Player
     draw_sprite(player);

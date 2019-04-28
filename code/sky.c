@@ -89,7 +89,7 @@ void draw_sky()
     draw_rectangle(0, 0, render_width, render_height);
 
     // Stars
-    if (!stars_gone && (hour >= sunset || hour < sunrise)) {
+    if (!stars_gone && (hour >= sunset || hour <= sunrise)) {
         set_hex_color(0xffffffff);
         for (int i = 0; i < STARS_SIZE; ++i)
             SDL_RenderFillRect(sdl.renderer, &stars[i]);
