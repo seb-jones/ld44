@@ -73,7 +73,7 @@ void draw_sky()
 
         sun->x = (int)(t *
                 (double)((((double)render_width * 1.5)) / 24.0)) * sun->width;
-        sun->y = render_height - 175 + 
+        sun->y = render_height - 200 + 
            (cos(t * (2.0 * M_PI)) * (double)sun->height * 1.5); 
     }
 

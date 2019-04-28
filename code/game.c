@@ -133,12 +133,20 @@ bool update_game()
                     devil->visible = true;
                 }
                 else {
-                */
                     show_event(get_event_by_name("minor_injury"));
-                /* } */
+                }
+                */
 
                 if (hour >= 24) {
                     hour = 0;
+
+                    if (food > 0) {
+                        --food;
+                    }
+                    else {
+                        died_of_starvation = true;
+                        return true;
+                    }
 
                     ++day;
                 }
