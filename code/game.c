@@ -79,8 +79,8 @@ bool setup_game()
 bool update_game()
 {
     if (died_of_starvation) {
-        draw_wrapped_string(font, "Death by starvation text here", 20, 100, 
-                render_width - 40);
+        draw_wrapped_string(font, "You have starved to death.", 8, 8, 
+                render_width - 16);
 
         if (key_just_down(okay_key)) {
             return false;
@@ -90,8 +90,8 @@ bool update_game()
     }
 
     if (died_of_bleeding) {
-        draw_wrapped_string(font, "Death by bleeding text here", 20, 100, 
-                render_width - 40);
+        draw_wrapped_string(font, "You have bled to death.", 8, 8, 
+                render_width - 16);
 
         if (key_just_down(okay_key)) {
             return false;

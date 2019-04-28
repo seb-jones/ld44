@@ -23,5 +23,5 @@ bool    left_eye_gone = false;
 bool    stars_gone = false;
 bool    color_gone = false;
 bool    bleeding = false;
-bool    died_of_starvation = false;
+bool    died_of_starvation = true;
 bool    died_of_bleeding = false;
