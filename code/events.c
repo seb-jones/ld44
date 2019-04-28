@@ -65,11 +65,17 @@ bool check_for_bandages()
 char *apply_bandages()
 {
     --bandages;
+    bleeding = false;
     return "You apply a bandage to the leg.";
 }
 
 char *ignore_wound()
 {
+    if (bleeding)
+        died_of_bleeding = true;
+    else 
+        bleeding = true;
+
     return "You leave the wound untreated.";
 }
 
@@ -111,7 +117,7 @@ Event events[EVENTS_SIZE] = {
         "You cut your leg on a sharp rock.",
         { "Apply a bandage",  apply_bandages, },
         { "Ignore the wound",  ignore_wound, },
-        NULL,
+        check_for_bandages,
         true,
     },
     {

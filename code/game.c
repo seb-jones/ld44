@@ -54,6 +54,28 @@ bool setup_game()
 // Returns false when the program should end
 bool update_game()
 {
+    if (died_of_starvation) {
+        draw_wrapped_string(font, "Death by starvation text here", 20, 100, 
+                render_width - 40);
+
+        if (key_just_down(okay_key)) {
+            return false;
+        }
+
+        return true;
+    }
+
+    if (died_of_bleeding) {
+        draw_wrapped_string(font, "Death by bleeding text here", 20, 100, 
+                render_width - 40);
+
+        if (key_just_down(okay_key)) {
+            return false;
+        }
+
+        return true;
+    }
+
     if (endgame) {
         draw_wrapped_string(font, "Endgame text here", 20, 100, 
                 render_width - 40);
@@ -111,9 +133,9 @@ bool update_game()
                     devil->visible = true;
                 }
                 else {
-                    show_event(get_random_event());
-                }
                 */
+                    show_event(get_event_by_name("minor_injury"));
+                /* } */
 
                 if (hour >= 24) {
                     hour = 0;

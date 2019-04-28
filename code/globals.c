@@ -19,3 +19,6 @@ int     food = 1;
 int     bandages = 0;
 int     money = 5;
 bool    left_eye_gone = false;
+bool    bleeding = false;
+bool    died_of_starvation = false;
+bool    died_of_bleeding = false;
