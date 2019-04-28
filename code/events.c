@@ -99,7 +99,12 @@ char *hear_out_stars_for_speed()
     return "bargain_stars_for_speed";
 }
 
-#define EVENTS_SIZE 5
+char *hear_out_color_for_health()
+{
+    return "bargain_colors_for_health";
+}
+
+#define EVENTS_SIZE 6
 Event events[EVENTS_SIZE] = {
     {
         "creek",
@@ -137,6 +142,14 @@ Event events[EVENTS_SIZE] = {
         "stars_for_speed",
         "A mysterious man appears. He wears a fine suit and offers a proposal.",
         { "Hear him out",  hear_out_stars_for_speed, },
+        { "Ignore him",  ignore_devil, },
+        NULL,
+        true,
+    },
+    {
+        "colors_for_health",
+        "A mysterious man appears. He wears a fine suit and offers a proposal.",
+        { "Hear him out",  hear_out_color_for_health, },
         { "Ignore him",  ignore_devil, },
         NULL,
         true,
@@ -186,7 +199,14 @@ char *remove_stars_for_speed()
     return "You look up and observe as all the stars in the sky vanish in an instant. When you direct your gaze back to the man, you find he is no where to be seen. However, your legs feel vital, as if they can walk much faster than previously.";
 }
 
-#define BARGAINS_SIZE 2
+char *remove_color_for_health()
+{
+    bandages = 99999;
+    color_gone = true;
+    return "Suddenly, the world around you becomes devoid of saturation. Everything is a tint of black or a shade of white. The man disappears, leaving behind a pile of bandages.";
+}
+
+#define BARGAINS_SIZE 3
 Event bargains[BARGAINS_SIZE] = {
     {
         "bargain_eye_for_food",
@@ -201,6 +221,14 @@ Event bargains[BARGAINS_SIZE] = {
         "\"I can make your journey many hours shorter... all I require\" - He gestures upwards - \"is the stars in your sky.",
         { "Accept his offer",  remove_stars_for_speed, },
         { "Decline his bizarre proposal",  decline_devil, },
+        NULL,
+        false,
+    },
+    {
+        "bargain_colors_for_health",
+        "I can take the pain away. You'll never hurt again. All I need... is the color from your world.",
+        { "Accept his offer",  remove_color_for_health, },
+        { "Decline his disturbing proposal",  decline_devil, },
         NULL,
         false,
     },
