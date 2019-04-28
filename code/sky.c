@@ -72,9 +72,8 @@ void draw_sky()
 
     if (hour >= sunrise && hour <= sunset) {
         double t = inverse_lerp_int(sunrise * 60, sunset * 60, (hour * 60) + minute);
-        sun->x = (int)(t * (double)(render_width * 2)) - (render_width / 2);
-        sun->y = render_height - 200 + 
-           (cos(t * (2.0 * M_PI)) * (double)sun->height * 1.5); 
+        sun->x = -sun->width + (int)((t) * (double)(render_width + sun->width * 2)) - (sun->width / 2);
+        sun->y = render_height - (sin(t * M_PI) * (double)render_height * 0.9); 
     }
 
     // Sky Background
