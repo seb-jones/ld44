@@ -1,6 +1,7 @@
-Sprite *player = 0;
-Sprite *devil = 0;
-Font   *font = 0;
+Sprite  *player = NULL;
+Sprite  *devil  = NULL;
+Font    *font   = NULL;
+Texture *left_eye_gone_overlay = NULL;
 
 char *displaying_outcome = "You hoist your bag onto you back, filled with what little food and supplies you have, and set out across the desert. You are sure you will find love and fortune on the other side, if you can only endure this trial...";
 
@@ -40,6 +41,10 @@ bool setup_game()
     devil->x = render_width - devil->width - 20;
     devil->y = render_height - devil->height * 2;
     devil->visible = false;
+
+    left_eye_gone_overlay = load_bitmap("assets/left_eye_gone.bmp");
+    if (!left_eye_gone_overlay)
+        return false;
 
     return true;
 }
@@ -131,6 +136,10 @@ bool update_game()
 
     // Devil
     draw_sprite(devil);
+
+    // Left Eye Gone
+    if (left_eye_gone)
+        draw_texture(left_eye_gone_overlay, 0, 0);
 
     // Text
     snprintf(temporary_string, TEMPORARY_STRING_SIZE, "Day %i | Time %02i:%02i\n%.0f miles left to town\nFood - %i | Bandages - %i | Money - %i", day, hour, minute, distance_left, food, bandages, money);
