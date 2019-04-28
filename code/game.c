@@ -136,19 +136,24 @@ bool update_game()
                     return true;
                 }
 
-                if (time_equals(1, 1, 60)) {
-                    show_event(get_event_by_name("money"));
-                    /*
+                if (time_equals(1, 0, 60)) {
+                    show_event(get_event_by_name("stars_for_health"));
                     bargaining = true;
                     devil->visible = true;
-                    */
                 }
-
-                /*
-                else {
-                    show_event(get_event_by_name("minor_injury"));
+                if (time_equals(2, 0, 60)) {
+                    show_event(get_event_by_name("eye_for_food"));
+                    bargaining = true;
+                    devil->visible = true;
                 }
-                */
+                else if (time_equals(3, 0, 60)) {
+                    show_event(get_event_by_name("colors_for_speed"));
+                    bargaining = true;
+                    devil->visible = true;
+                }
+                else if (hour % 6 == 0) {
+                    show_event(get_random_event());
+                }
 
                 if (hour >= 24) {
                     hour = 0;

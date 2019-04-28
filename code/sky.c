@@ -41,7 +41,7 @@ bool load_sky()
     if (!sun)
         return false;
 
-    sun->color = 0xffffffaa;
+    sun->color = 0xffffffff;
     sun->alpha = 0xff;
     sun->x = 250; 
     sun->y = 50;

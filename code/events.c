@@ -86,9 +86,9 @@ bool check_for_5_money()
     return money >= 5;
 }
 
-bool check_for_10_money()
+bool can_pay_doctor()
 {
-    return money >= 10;
+    return money >= 10 && (bleeding || miles_per_hour < BASE_MILES_PER_HOUR);
 }
 
 char *apply_bandages()
@@ -233,14 +233,14 @@ char *hear_out_eye_for_food()
     return "bargain_eye_for_food";
 }
 
-char *hear_out_stars_for_speed()
+char *hear_out_stars_for_health()
 {
-    return "bargain_stars_for_speed";
+    return "bargain_stars_for_health";
 }
 
-char *hear_out_color_for_health()
+char *hear_out_color_for_speed()
 {
-    return "bargain_colors_for_health";
+    return "bargain_colors_for_speed";
 }
 
 #define EVENTS_SIZE 15
@@ -290,7 +290,7 @@ Event events[EVENTS_SIZE] = {
         "You meet a doctor on his way to town. He offers to cure all your ills for 10 coins.",
         { "Accept",  accept_doctor, },
         { "Decline",  decline_doctor, },
-        check_for_10_money,
+        can_pay_doctor,
         true,
     },
     {
@@ -348,23 +348,23 @@ Event events[EVENTS_SIZE] = {
         { "Hear him out",  hear_out_eye_for_food, },
         { "Ignore him",  ignore_devil, },
         NULL,
-        true,
+        false,
     },
     {
-        "stars_for_speed",
+        "stars_for_health",
         "A mysterious man appears. He wears a fine suit and offers a proposal.",
-        { "Hear him out",  hear_out_stars_for_speed, },
+        { "Hear him out",  hear_out_stars_for_health, },
         { "Ignore him",  ignore_devil, },
         NULL,
-        true,
+        false,
     },
     {
-        "colors_for_health",
+        "colors_for_speed",
         "A mysterious man appears. He wears a fine suit and offers a proposal.",
-        { "Hear him out",  hear_out_color_for_health, },
+        { "Hear him out",  hear_out_color_for_speed, },
         { "Ignore him",  ignore_devil, },
         NULL,
-        true,
+        false,
     },
 };
 
@@ -404,18 +404,22 @@ char *remove_eye_for_food()
     return "You take the knife and cut your left eye from it's socket. The pain is intense, but you are surprised at the lack of bleeding. The man vanishes, leaving behind a plentiful sack of grain.";
 }
 
-char *remove_stars_for_speed()
+char *remove_stars_for_health()
 {
-    miles_per_hour *= 3;
     stars_gone = true;
-    return "You look up and observe as all the stars in the sky vanish in an instant. When you direct your gaze back to the man, you find he is no where to be seen. However, your legs feel vital, as if they can walk much faster than previously.";
+    bandages = 99999;
+    bleeding = false;
+    if (miles_per_hour < BASE_MILES_PER_HOUR) 
+        miles_per_hour = BASE_MILES_PER_HOUR;
+
+    return "You look up and observe as all the stars in the sky vanish in an instant. When you direct your gaze back to the man, you find nothing but a pile of bandages.";
 }
 
-char *remove_color_for_health()
+char *remove_color_for_speed()
 {
-    bandages = 99999;
+    miles_per_hour *= 3;
     color_gone = true;
-    return "Suddenly, the world around you becomes devoid of saturation. Everything is a tint of black or a shade of white. The man disappears, leaving behind a pile of bandages.";
+    return "Suddenly, the world around you becomes devoid of saturation. Everything is a tint of black or a shade of white. You know not where the man has gone, but your legs feel vital and capable of superior speed.";
 }
 
 #define BARGAINS_SIZE 3
@@ -429,17 +433,17 @@ Event bargains[BARGAINS_SIZE] = {
         false,
     },
     {
-        "bargain_stars_for_speed",
-        "\"I can make your journey many hours shorter... all I require\" - He gestures upwards - \"is the stars in your sky.",
-        { "Accept his offer",  remove_stars_for_speed, },
+        "bargain_stars_for_health",
+        "\"I can take the pain away. You'll never hurt again. All I require\" - He gestures upwards - \"is the stars in your sky.",
+        { "Accept his offer",  remove_stars_for_health, },
         { "Decline his bizarre proposal",  decline_devil, },
         NULL,
         false,
     },
     {
-        "bargain_colors_for_health",
-        "I can take the pain away. You'll never hurt again. All I need... is the color from your world.",
-        { "Accept his offer",  remove_color_for_health, },
+        "bargain_colors_for_speed",
+        "\"I can make your journey many hours shorter. All I need... is the colour of your world.\"",
+        { "Accept his offer",  remove_color_for_speed, },
         { "Decline his disturbing proposal",  decline_devil, },
         NULL,
         false,
