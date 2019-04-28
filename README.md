@@ -1,5 +1,5 @@
 # Faustian Sands
-Entry for Ludum Dare 44. Written in C, using SDL2. Developed on Arch Linux using Vim. Compiled on Windows with Visual Studio 2017.
+Entry for Ludum Dare 44. Written in C, using SDL2 (v2.0.9). Developed on Arch Linux using Vim. Compiled on Windows with Visual Studio 2017.
 
 ## About
 When I first saw the theme, I spent some time thinking and then wrote the following:
