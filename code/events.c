@@ -1,4 +1,5 @@
 typedef struct Choice
+
 {
     char    *label;
     char    *(*callback)();
