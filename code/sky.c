@@ -78,7 +78,11 @@ void draw_sky()
     }
 
     // Sky Background
-    set_hex_color(lerp_color(sky_color->color, next_sky_color->color, t));
+    if (color_gone)
+        set_hex_color(0xffaaaaaa);
+    else 
+        set_hex_color(lerp_color(sky_color->color, next_sky_color->color, t));
+
     draw_rectangle(0, 0, render_width, render_height);
 
     // Stars

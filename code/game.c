@@ -2,6 +2,8 @@ Sprite  *player = NULL;
 Sprite  *devil  = NULL;
 Font    *font   = NULL;
 Texture *left_eye_gone_overlay = NULL;
+Texture *player_monochrome     = NULL;
+Texture *devil_monochrome      = NULL;
 
 char *displaying_outcome = "You hoist your bag onto you back, filled with what little food and supplies you have, and set out across the desert. You are sure you will find love and fortune on the other side, if you can only endure this trial...";
 
@@ -44,6 +46,14 @@ bool setup_game()
 
     left_eye_gone_overlay = load_bitmap("assets/left_eye_gone.bmp");
     if (!left_eye_gone_overlay)
+        return false;
+
+    player_monochrome = load_bitmap("assets/player_monochrome.bmp");
+    if (!player_monochrome)
+        return false;
+
+    devil_monochrome = load_bitmap("assets/devil_monochrome.bmp");
+    if (!devil_monochrome)
         return false;
 
     return true;
@@ -126,12 +136,12 @@ bool update_game()
                     return true;
                 }
 
+                /*
                 if (time_equals(1, 1, 60)) {
                     show_event(get_event_by_name("stars_for_speed"));
                     bargaining = true;
                     devil->visible = true;
                 }
-                /*
                 else {
                     show_event(get_event_by_name("minor_injury"));
                 }
@@ -157,10 +167,19 @@ bool update_game()
         }
     }
 
+    if (color_gone) {
+        player->texture = player_monochrome;
+        devil->texture = devil_monochrome;
+    }
+
     draw_sky();
 
     // Floor
-    set_hex_color(0xffffd8b0);
+    if (color_gone)
+        set_hex_color(0xffdddddd);
+    else 
+        set_hex_color(0xffffd8b0);
+
     draw_rectangle(0, render_height - (player->height + 10), render_width, player->height + 10);
 
     // Player
@@ -202,17 +221,6 @@ bool update_game()
                 "b - %s", displaying_event->choice_b.label);
 
         draw_string(font, temporary_string, 20, 145);
-
-        /*
-        if (!event_conditions_fulfilled()) {
-            font->color = 0xffaa1111;
-            snprintf(temporary_string, TEMPORARY_STRING_SIZE,
-                    "c - Bargain", displaying_event->choice_b.label);
-
-            draw_string(font, temporary_string, 20, 160);
-            font->color = 0xffffffff;
-        }
-        */
     }
 
     return true;
