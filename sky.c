@@ -16,6 +16,22 @@ SkyColor sky_colors[SKY_COLORS_SIZE] = {
     { 0, 6, 0xff000044 },
 };
 
+#define STARS_SIZE 12
+SDL_Rect stars[STARS_SIZE] = {
+    { 10, 10, 1, 1 },
+    { 100, 50, 1, 1 },
+    { 60, 20, 1, 1 },
+    { 30, 70, 1, 1 },
+    { 100, 100, 1, 1 },
+    { 200, 80, 1, 1 },
+    { 230, 170, 1, 1 },
+    { 180, 120, 1, 1 },
+    { 120, 160, 1, 1 },
+    { 80, 150, 1, 1 },
+    { 300, 30, 1, 1 },
+    { 280, 100, 1, 1 },
+};
+
 Sprite *sun = 0;
 
 bool load_sky()
@@ -52,12 +68,20 @@ void draw_sky()
     double t = (double)(hour - sky_color->start_hour) /
         (double)(next_sky_color->start_hour - sky_color->start_hour);
 
-    set_hex_color(lerp_color(sky_color->color, next_sky_color->color, t));
-    draw_rectangle(0, 0, render_width, render_height);
-
     if (hour >= sunrise && hour <= sunset) {
         sun->x = (int)(inverse_lerp_int(sunrise, sunset, hour) *
                 (double)(((render_width * 2)) / 24)) * sun->width;
+    }
+
+    // Sky Background
+    set_hex_color(lerp_color(sky_color->color, next_sky_color->color, t));
+    draw_rectangle(0, 0, render_width, render_height);
+
+    // Stars
+    if (hour > sunset || hour < sunrise) {
+        set_hex_color(0xffffffff);
+        for (int i = 0; i < STARS_SIZE; ++i)
+            SDL_RenderFillRect(sdl.renderer, &stars[i]);
     }
 
     // Sun

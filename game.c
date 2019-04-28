@@ -104,6 +104,7 @@ bool update_game()
                     return true;
                 }
 
+                /*
                 if (time_equals(day, hour, minute)) {
                     show_event(get_event_by_name("eye_for_food"));
                     bargaining = true;
@@ -112,6 +113,7 @@ bool update_game()
                 else {
                     show_event(get_random_event());
                 }
+                */
 
                 if (hour >= 24) {
                     hour = 0;

@@ -8,10 +8,10 @@ const char *okay_key = "Return";
 const char *fullscreen_key = "F11";
 
 // Gameplay
-double  distance_left = 2.0;
+double  distance_left = 100;
 double  miles_per_hour = 1.0;
 int     day = 0;
-int     hour = 5;
+int     hour = 18;
 int     minute = 58;
 int     sunrise = 6;
 int     sunset  = 18;
