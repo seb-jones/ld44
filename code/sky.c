@@ -6,14 +6,16 @@ typedef struct SkyColor
 }
 SkyColor;
 
-#define SKY_COLORS_SIZE 7
+#define SKY_COLORS_SIZE 9
 SkyColor sky_colors[SKY_COLORS_SIZE] = {
-    { 6, 9, 0xff000044 },
+    { 5, 7, 0xff000044 },
+    { 7, 9, 0xffFF9665 },
     { 9, 12, 0xff4080ff },
     { 12, 15, 0xff4080ff },
-    { 15, 18, 0xff4080ff },
-    { 18, 0, 0xff000044 },
-    { 0, 6, 0xff000044 },
+    { 15, 17, 0xff4080ff },
+    { 17, 19, 0xffFF9665 },
+    { 19, 0, 0xff000044 },
+    { 0, 5, 0xff000044 },
 };
 
 #define STARS_SIZE 12
