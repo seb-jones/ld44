@@ -79,7 +79,7 @@ void draw_sky()
 
     // Sky Background
     if (color_gone)
-        set_hex_color(0xffaaaaaa);
+        set_hex_color(0xffdddddd);
     else 
         set_hex_color(lerp_color(sky_color->color, next_sky_color->color, t));
 

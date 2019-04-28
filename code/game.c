@@ -1,11 +1,12 @@
 Sprite  *player = NULL;
 Sprite  *devil  = NULL;
 Font    *font   = NULL;
-Texture *left_eye_gone_overlay = NULL;
-Texture *player_monochrome     = NULL;
-Texture *player_reg_frame      = NULL;
-Texture *player_alt_frame      = NULL;
-Texture *devil_monochrome      = NULL;
+Texture *left_eye_gone_overlay       = NULL;
+Texture *player_monochrome           = NULL;
+Texture *player_reg_frame            = NULL;
+Texture *player_alt_frame            = NULL;
+Texture *player_alt_frame_monochrome = NULL;
+Texture *devil_monochrome            = NULL;
 
 char *displaying_outcome = "You hoist your bag onto you back, filled with what little food and supplies you have, and set out across the desert. You are sure you will find love and fortune on the other side, if you can only endure this trial...";
 
@@ -54,6 +55,11 @@ bool setup_game()
 
     player_alt_frame = load_bitmap("assets/player_alt_frame.bmp");
     if (!player_alt_frame)
+        return false;
+
+    player_alt_frame_monochrome = load_bitmap(
+            "assets/player_alt_frame_monochrome.bmp");
+    if (!player_alt_frame_monochrome)
         return false;
 
     player_monochrome = load_bitmap("assets/player_monochrome.bmp");
@@ -114,7 +120,7 @@ bool update_game()
             }
         }
         else {
-            if (event_conditions_fulfilled() && key_just_down(a_key)) {
+            if (event_conditions_fulfilled() && key_just_down(one_key)) {
                 if (bargaining) {
                     show_event(get_bargain_by_name(
                                 displaying_event->choice_a.callback()));
@@ -124,7 +130,7 @@ bool update_game()
                     displaying_outcome = displaying_event->choice_a.callback();
                 }
             }
-            else if (key_just_down(b_key)) {
+            else if (key_just_down(two_key)) {
                 displaying_outcome = displaying_event->choice_b.callback();
             }
         }
@@ -138,11 +144,6 @@ bool update_game()
             if (minute >= 60) {
                 ++hour;
 
-                if (hour % 2)
-                    player->texture = player_alt_frame;
-                else
-                    player->texture = player_reg_frame;
-
                 distance_left -= miles_per_hour;
 
                 if (distance_left <= 0) {
@@ -150,17 +151,17 @@ bool update_game()
                     return true;
                 }
 
-                if (time_equals(1, 0, 60)) {
+                if (time_equals(1, 24, 60)) {
                     show_event(get_event_by_name("stars_for_health"));
                     bargaining = true;
                     devil->visible = true;
                 }
-                if (time_equals(2, 0, 60)) {
+                else if (time_equals(2, 24, 60)) {
                     show_event(get_event_by_name("eye_for_food"));
                     bargaining = true;
                     devil->visible = true;
                 }
-                else if (time_equals(3, 0, 60)) {
+                else if (time_equals(3, 24, 60)) {
                     show_event(get_event_by_name("colors_for_speed"));
                     bargaining = true;
                     devil->visible = true;
@@ -190,15 +191,26 @@ bool update_game()
     }
 
     if (color_gone) {
-        player->texture = player_monochrome;
+        if (hour % 2)
+            player->texture = player_alt_frame_monochrome;
+        else
+            player->texture = player_monochrome;
+
+
         devil->texture = devil_monochrome;
+    }
+    else {
+        if (hour % 2)
+            player->texture = player_alt_frame;
+        else
+            player->texture = player_reg_frame;
     }
 
     draw_sky();
 
     // Floor
     if (color_gone)
-        set_hex_color(0xffdddddd);
+        set_hex_color(0xff888888);
     else 
         set_hex_color(0xffffd8b0);
 
@@ -231,14 +243,14 @@ bool update_game()
         }
 
         snprintf(temporary_string, TEMPORARY_STRING_SIZE,
-                "a - %s", displaying_event->choice_a.label);
+                "1 - %s", displaying_event->choice_a.label);
 
         draw_string(font, temporary_string, 20, 130);
 
         font->color = 0xffffffff;
 
         snprintf(temporary_string, TEMPORARY_STRING_SIZE,
-                "b - %s", displaying_event->choice_b.label);
+                "2 - %s", displaying_event->choice_b.label);
 
         draw_string(font, temporary_string, 20, 145);
     }
