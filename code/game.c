@@ -3,6 +3,8 @@ Sprite  *devil  = NULL;
 Font    *font   = NULL;
 Texture *left_eye_gone_overlay = NULL;
 Texture *player_monochrome     = NULL;
+Texture *player_reg_frame      = NULL;
+Texture *player_alt_frame      = NULL;
 Texture *devil_monochrome      = NULL;
 
 char *displaying_outcome = "You hoist your bag onto you back, filled with what little food and supplies you have, and set out across the desert. You are sure you will find love and fortune on the other side, if you can only endure this trial...";
@@ -35,6 +37,8 @@ bool setup_game()
     player->x = render_width / 2 - player->width / 2;
     player->y = render_height - player->height * 2;
 
+    player_reg_frame = player->texture;
+
     // Devil
     devil = load_sprite("assets/devil.bmp");
     if (!devil)
@@ -46,6 +50,10 @@ bool setup_game()
 
     left_eye_gone_overlay = load_bitmap("assets/left_eye_gone.bmp");
     if (!left_eye_gone_overlay)
+        return false;
+
+    player_alt_frame = load_bitmap("assets/player_alt_frame.bmp");
+    if (!player_alt_frame)
         return false;
 
     player_monochrome = load_bitmap("assets/player_monochrome.bmp");
@@ -126,8 +134,14 @@ bool update_game()
         while (minute_timer >= ONE_SECOND) {
             ++minute;
 
+
             if (minute >= 60) {
                 ++hour;
+
+                if (hour % 2)
+                    player->texture = player_alt_frame;
+                else
+                    player->texture = player_reg_frame;
 
                 distance_left -= miles_per_hour;
 
