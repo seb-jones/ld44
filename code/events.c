@@ -34,6 +34,7 @@ void show_event(Event *event)
 		return;
 
     displaying_event = event;
+	displaying_event->seen = true;
 }
 
 char *ford_the_river()
@@ -391,8 +392,6 @@ Event *get_random_event()
         event = &events[rand() % EVENTS_SIZE];
     }
     while(!event->allow_random_selection || event->seen);
-
-    event->seen = true;
 
     return event;
 }

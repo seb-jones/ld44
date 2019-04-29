@@ -249,9 +249,9 @@ bool update_game()
     }
 
     if (color_gone) {
-        if (minute % 59)
+        if (hour % 2)
             player->texture = player_alt_frame_monochrome;
-        else if (minute == 29)
+        else
             player->texture = player_monochrome;
 
 
