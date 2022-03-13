@@ -347,3 +347,6 @@ MigrationBackup/
 
 # GCC Binary
 a.out
+
+# Build directory
+/build
