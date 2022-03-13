@@ -17,8 +17,8 @@ Module.expectedDataFileDownloads++;
   } else if (typeof process === "undefined" && typeof location !== "undefined") {
    PACKAGE_PATH = encodeURIComponent(location.pathname.toString().substring(0, location.pathname.toString().lastIndexOf("/")) + "/");
   }
-  var PACKAGE_NAME = "build/index.data";
-  var REMOTE_PACKAGE_BASE = "index.data";
+  var PACKAGE_NAME = "build/ld44.data";
+  var REMOTE_PACKAGE_BASE = "ld44.data";
   if (typeof Module["locateFilePackage"] === "function" && !Module["locateFile"]) {
    Module["locateFile"] = Module["locateFilePackage"];
    err("warning: you defined Module.locateFilePackage, that has been renamed to Module.locateFile (using your locateFilePackage for now)");
@@ -129,9 +129,9 @@ Module.expectedDataFileDownloads++;
     for (var i = 0; i < files.length; ++i) {
      DataRequest.prototype.requests[files[i].filename].onload();
     }
-    Module["removeRunDependency"]("datafile_build/index.data");
+    Module["removeRunDependency"]("datafile_build/ld44.data");
    }
-   Module["addRunDependency"]("datafile_build/index.data");
+   Module["addRunDependency"]("datafile_build/ld44.data");
    if (!Module.preloadResults) Module.preloadResults = {};
    Module.preloadResults[PACKAGE_NAME] = {
     fromCache: false
@@ -201,7 +201,7 @@ Module.expectedDataFileDownloads++;
    "end": 310716
   } ],
   "remote_package_size": 310716,
-  "package_uuid": "f7948ab0-43f2-4ae5-8dbd-e6f05f407990"
+  "package_uuid": "9f9f86a6-f579-4453-9d42-f453ab4e4d59"
  });
 })();
 
@@ -1446,7 +1446,7 @@ function createExportWrapper(name, fixedasm) {
 
 var wasmBinaryFile;
 
-wasmBinaryFile = "index.wasm";
+wasmBinaryFile = "ld44.wasm";
 
 if (!isDataURI(wasmBinaryFile)) {
  wasmBinaryFile = locateFile(wasmBinaryFile);
