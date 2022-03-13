@@ -80,7 +80,18 @@ void toggle_fullscreen()
         SDL_SetWindowFullscreen(sdl.window, SDL_WINDOW_FULLSCREEN_DESKTOP);
 }
 
-int main(int argc, char **argv)
+u64 start_time = 0;
+u64 previous_time = 0;
+u64 elapsed_time = 0;
+
+u64 fps_timer = 0;
+u32 target_fps = 60;
+u64 time_per_frame = 0;
+u32 fps = 0;
+
+SDL_Event event;
+
+int setup()
 {
     srand((unsigned int)time(0));
 
@@ -117,69 +128,76 @@ int main(int argc, char **argv)
         return log_error_and_cleanup_sdl("Error setting up game");
     }
 
-    u64 start_time    = microtime();
-    u64 previous_time = 0;
-    u64 elapsed_time  = 0;
+    start_time = microtime();
+    time_per_frame = 1000000 / target_fps;
 
-    u64 fps_timer = 0;
-    u32 target_fps = 60;
-    u64 time_per_frame = 1000000 / target_fps;
-    u32 fps = 0;
+    return 0;
+}
 
-    SDL_Event event;
-    bool running = true;
+bool cleanup()
+{
+    destroy_game();
+    cleanup_sdl();
 
-    while (running) {
-        previous_time = start_time;
-        start_time = microtime();
+    return false;
+}
 
-        elapsed_seconds = ((double)start_time - (double)previous_time) / 1000000.0;
-        
-        fps_timer += start_time - previous_time;
+bool do_frame()
+{
+    previous_time = start_time;
+    start_time = microtime();
 
-        while (fps_timer >= 1000000) {
-            fps_timer -= 1000000;
+    elapsed_seconds = ((double)start_time - (double)previous_time) / 1000000.0;
 
-            snprintf(temporary_string, TEMPORARY_STRING_SIZE, "FPS: %u", fps);
-            SDL_SetWindowTitle(sdl.window, temporary_string);
+    fps_timer += start_time - previous_time;
 
-            fps = 0;
-        }
+    while (fps_timer >= 1000000) {
+        fps_timer -= 1000000;
 
-        while (SDL_PollEvent(&event)) {
-            if (event.type == SDL_QUIT) {
-                running = false;
-            }
-        }
+        snprintf(temporary_string, TEMPORARY_STRING_SIZE, "FPS: %u", fps);
+        SDL_SetWindowTitle(sdl.window, temporary_string);
 
-        if (!running) break;
-
-        update_input();
-
-        if (key_just_down(fullscreen_key)) {
-            toggle_fullscreen();
-        }
-
-        set_hex_color(0xff1f1f1f);
-        SDL_RenderClear(sdl.renderer);
-
-        if (!update_game()) {
-            running = false;
-            break;
-        }
-
-        SDL_RenderPresent(sdl.renderer);
-
-        while (( elapsed_time = microtime() - start_time ) < time_per_frame) {
-            SDL_Delay((u32) ((time_per_frame - elapsed_time) / 1000));
-        }
-
-        ++fps;
+        fps = 0;
     }
 
-    destroy_game();
+    while (SDL_PollEvent(&event)) {
+        if (event.type == SDL_QUIT) {
+            return cleanup();
+        }
+    }
 
-    cleanup_sdl();
+    update_input();
+
+    if (key_just_down(fullscreen_key)) {
+        toggle_fullscreen();
+    }
+
+    set_hex_color(0xff1f1f1f);
+    SDL_RenderClear(sdl.renderer);
+
+    if (!update_game()) {
+        return cleanup();
+    }
+
+    SDL_RenderPresent(sdl.renderer);
+
+    while ((elapsed_time = microtime() - start_time) < time_per_frame) {
+        SDL_Delay((u32)((time_per_frame - elapsed_time) / 1000));
+    }
+
+    ++fps;
+
+    return true;
+}
+
+int main(int argc, char **argv)
+{
+    if (setup()) {
+        return 1;
+    }
+
+    while (do_frame())
+        ;
 
     return 0;
 }
