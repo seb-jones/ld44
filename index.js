@@ -201,7 +201,7 @@ Module.expectedDataFileDownloads++;
    "end": 310716
   } ],
   "remote_package_size": 310716,
-  "package_uuid": "f99e15bc-54df-4be5-a962-50e3bed873e0"
+  "package_uuid": "b593c96c-6017-437c-bcaf-8277ccce9977"
  });
 })();
 
@@ -1694,7 +1694,7 @@ var tempDouble;
 var tempI64;
 
 var ASM_CONSTS = {
- 114172: function($0) {
+ 114316: function($0) {
   var str = UTF8ToString($0) + "\n\n" + "Abort/Retry/Ignore/AlwaysIgnore? [ariA] :";
   var reply = window.prompt(str, "i");
   if (reply === null) {
@@ -1702,7 +1702,7 @@ var ASM_CONSTS = {
   }
   return allocate(intArrayFromString(reply), "i8", ALLOC_NORMAL);
  },
- 114397: function() {
+ 114541: function() {
   if (typeof AudioContext !== "undefined") {
    return 1;
   } else if (typeof webkitAudioContext !== "undefined") {
@@ -1710,7 +1710,7 @@ var ASM_CONSTS = {
   }
   return 0;
  },
- 114534: function() {
+ 114678: function() {
   if (typeof navigator.mediaDevices !== "undefined" && typeof navigator.mediaDevices.getUserMedia !== "undefined") {
    return 1;
   } else if (typeof navigator.webkitGetUserMedia !== "undefined") {
@@ -1718,7 +1718,7 @@ var ASM_CONSTS = {
   }
   return 0;
  },
- 114758: function($0) {
+ 114902: function($0) {
   if (typeof Module["SDL2"] === "undefined") {
    Module["SDL2"] = {};
   }
@@ -1740,11 +1740,11 @@ var ASM_CONSTS = {
   }
   return SDL2.audioContext === undefined ? -1 : 0;
  },
- 115251: function() {
+ 115395: function() {
   var SDL2 = Module["SDL2"];
   return SDL2.audioContext.sampleRate;
  },
- 115319: function($0, $1, $2, $3) {
+ 115463: function($0, $1, $2, $3) {
   var SDL2 = Module["SDL2"];
   var have_microphone = function(stream) {
    if (SDL2.capture.silenceTimer !== undefined) {
@@ -1785,7 +1785,7 @@ var ASM_CONSTS = {
    }, have_microphone, no_microphone);
   }
  },
- 116971: function($0, $1, $2, $3) {
+ 117115: function($0, $1, $2, $3) {
   var SDL2 = Module["SDL2"];
   SDL2.audio.scriptProcessorNode = SDL2.audioContext["createScriptProcessor"]($1, 0, $0);
   SDL2.audio.scriptProcessorNode["onaudioprocess"] = function(e) {
@@ -1797,7 +1797,7 @@ var ASM_CONSTS = {
   };
   SDL2.audio.scriptProcessorNode["connect"](SDL2.audioContext["destination"]);
  },
- 117381: function($0, $1) {
+ 117525: function($0, $1) {
   var SDL2 = Module["SDL2"];
   var numChannels = SDL2.capture.currentCaptureBuffer.numberOfChannels;
   for (var c = 0; c < numChannels; ++c) {
@@ -1816,7 +1816,7 @@ var ASM_CONSTS = {
    }
   }
  },
- 117986: function($0, $1) {
+ 118130: function($0, $1) {
   var SDL2 = Module["SDL2"];
   var numChannels = SDL2.audio.currentOutputBuffer["numberOfChannels"];
   for (var c = 0; c < numChannels; ++c) {
@@ -1829,7 +1829,7 @@ var ASM_CONSTS = {
    }
   }
  },
- 118466: function($0) {
+ 118610: function($0) {
   var SDL2 = Module["SDL2"];
   if ($0) {
    if (SDL2.capture.silenceTimer !== undefined) {
@@ -1867,7 +1867,7 @@ var ASM_CONSTS = {
    SDL2.audioContext = undefined;
   }
  },
- 119638: function($0, $1, $2) {
+ 119782: function($0, $1, $2) {
   var w = $0;
   var h = $1;
   var pixels = $2;
@@ -1939,7 +1939,7 @@ var ASM_CONSTS = {
   SDL2.ctx.putImageData(SDL2.image, 0, 0);
   return 0;
  },
- 121117: function($0, $1, $2, $3, $4) {
+ 121261: function($0, $1, $2, $3, $4) {
   var w = $0;
   var h = $1;
   var hot_x = $2;
@@ -1976,29 +1976,29 @@ var ASM_CONSTS = {
   stringToUTF8(url, urlBuf, url.length + 1);
   return urlBuf;
  },
- 122106: function($0) {
+ 122250: function($0) {
   if (Module["canvas"]) {
    Module["canvas"].style["cursor"] = UTF8ToString($0);
   }
   return 0;
  },
- 122199: function() {
+ 122343: function() {
   if (Module["canvas"]) {
    Module["canvas"].style["cursor"] = "none";
   }
  },
- 122268: function() {
+ 122412: function() {
   return window.innerWidth;
  },
- 122298: function() {
+ 122442: function() {
   return window.innerHeight;
  },
- 122329: function() {
+ 122473: function() {
   return withBuiltinMalloc(function() {
    return allocateUTF8(Module["UBSAN_OPTIONS"] || 0);
   });
  },
- 122427: function() {
+ 122571: function() {
   var setting = Module["printWithColors"];
   if (setting != null) {
    return setting;
