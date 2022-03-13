@@ -1,3 +1,8 @@
+#ifdef __EMSCRIPTEN__
+#include <emscripten.h>
+#include <emscripten/html5.h>
+#endif
+
 #include <assert.h>
 #include <math.h>
 #include <stdbool.h>
@@ -45,6 +50,17 @@ int render_height = 240;
 #include "sky.c"
 #include "game.c"
 
+u64 start_time = 0;
+u64 previous_time = 0;
+u64 elapsed_time = 0;
+
+u64 fps_timer = 0;
+u32 target_fps = 60;
+u64 time_per_frame = 0;
+u32 fps = 0;
+
+SDL_Event event;
+
 void cleanup_sdl()
 {
     if (sdl.renderer) SDL_DestroyRenderer(sdl.renderer);
@@ -79,17 +95,6 @@ void toggle_fullscreen()
     else
         SDL_SetWindowFullscreen(sdl.window, SDL_WINDOW_FULLSCREEN_DESKTOP);
 }
-
-u64 start_time = 0;
-u64 previous_time = 0;
-u64 elapsed_time = 0;
-
-u64 fps_timer = 0;
-u32 target_fps = 60;
-u64 time_per_frame = 0;
-u32 fps = 0;
-
-SDL_Event event;
 
 int setup()
 {
@@ -139,7 +144,7 @@ bool cleanup()
     destroy_game();
     cleanup_sdl();
 
-    return false;
+    return 0;
 }
 
 bool do_frame()
@@ -181,14 +186,17 @@ bool do_frame()
 
     SDL_RenderPresent(sdl.renderer);
 
-    while ((elapsed_time = microtime() - start_time) < time_per_frame) {
-        SDL_Delay((u32)((time_per_frame - elapsed_time) / 1000));
-    }
-
     ++fps;
 
     return true;
 }
+
+#ifdef __EMSCRIPTEN__
+EM_BOOL do_emscripten_frame(double time, void *userData)
+{
+    return do_frame();
+}
+#endif
 
 int main(int argc, char **argv)
 {
@@ -196,8 +204,16 @@ int main(int argc, char **argv)
         return 1;
     }
 
-    while (do_frame())
-        ;
+#ifdef __EMSCRIPTEN__
+    emscripten_request_animation_frame_loop(do_emscripten_frame, 0);
+#else
+    while (do_frame()) {
+        // Delay until next frame
+        while ((elapsed_time = microtime() - start_time) < time_per_frame) {
+            SDL_Delay((u32)((time_per_frame - elapsed_time) / 1000));
+        }
+    }
+#endif
 
     return 0;
 }
