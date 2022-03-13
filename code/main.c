@@ -36,8 +36,8 @@ SDLGlobals  sdl = {0};
 #define TEMPORARY_STRING_SIZE 5012
 char *temporary_string;
 
-int window_width = 640;
-int window_height = 480;
+int window_width = 1024;
+int window_height = 768;
 int render_width = 320;
 int render_height = 240;
 
