@@ -8,3 +8,8 @@ web:	code/*.c
 	$(MAKE_BUILD_DIRECTORY)
 	cp code/index.html build/index.html
 	emcc -Wall -g -O0 -fsanitize=undefined -s ASSERTIONS=1 -s SAFE_HEAP=1 -s ENVIRONMENT=web -s USE_SDL=2 --preload-file assets -o build/ld44.js code/main.c
+
+web-prod:	code/*.c
+	$(MAKE_BUILD_DIRECTORY)
+	cp code/index.html build/index.html
+	emcc -O3 -s ENVIRONMENT=web -s USE_SDL=2 --preload-file assets -o build/ld44.js code/main.c

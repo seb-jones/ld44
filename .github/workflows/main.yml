@@ -23,7 +23,7 @@ jobs:
           actions-cache-folder: 'emsdk-cache'
 
       - name: Build application for the web
-        run: make web
+        run: make web-prod
 
       - name: Deploy built files to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
