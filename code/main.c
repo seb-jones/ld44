@@ -108,9 +108,9 @@ int setup()
 
     int window_x = SDL_WINDOWPOS_CENTERED;
 
-    sdl.window = SDL_CreateWindow("Test", 
-            window_x, SDL_WINDOWPOS_CENTERED, 
-            window_width, window_height, 0);
+    sdl.window =
+        SDL_CreateWindow("Faustian Sands", window_x, SDL_WINDOWPOS_CENTERED,
+                         window_width, window_height, 0);
     if (!sdl.window) {
         return log_sdl_error_and_cleanup_sdl("Unable to create window");
     }
@@ -160,7 +160,7 @@ bool do_frame()
         fps_timer -= 1000000;
 
         snprintf(temporary_string, TEMPORARY_STRING_SIZE, "FPS: %u", fps);
-        SDL_SetWindowTitle(sdl.window, temporary_string);
+        /* SDL_SetWindowTitle(sdl.window, temporary_string); */
 
         fps = 0;
     }
