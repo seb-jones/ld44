@@ -1,3 +1,8 @@
+#ifdef __EMSCRIPTEN__
+#include <emscripten.h>
+#include <emscripten/html5.h>
+#endif
+
 #include <assert.h>
 #include <math.h>
 #include <stdbool.h>
@@ -31,8 +36,8 @@ SDLGlobals  sdl = {0};
 #define TEMPORARY_STRING_SIZE 5012
 char *temporary_string;
 
-int window_width = 640;
-int window_height = 480;
+int window_width = 1024;
+int window_height = 768;
 int render_width = 320;
 int render_height = 240;
 
@@ -44,6 +49,17 @@ int render_height = 240;
 #include "events.c"
 #include "sky.c"
 #include "game.c"
+
+u64 start_time = 0;
+u64 previous_time = 0;
+u64 elapsed_time = 0;
+
+u64 fps_timer = 0;
+u32 target_fps = 60;
+u64 time_per_frame = 0;
+u32 fps = 0;
+
+SDL_Event event;
 
 void cleanup_sdl()
 {
@@ -80,7 +96,7 @@ void toggle_fullscreen()
         SDL_SetWindowFullscreen(sdl.window, SDL_WINDOW_FULLSCREEN_DESKTOP);
 }
 
-int main(int argc, char **argv)
+int setup()
 {
     srand((unsigned int)time(0));
 
@@ -92,9 +108,9 @@ int main(int argc, char **argv)
 
     int window_x = SDL_WINDOWPOS_CENTERED;
 
-    sdl.window = SDL_CreateWindow("Test", 
-            window_x, SDL_WINDOWPOS_CENTERED, 
-            window_width, window_height, 0);
+    sdl.window =
+        SDL_CreateWindow("Faustian Sands", window_x, SDL_WINDOWPOS_CENTERED,
+                         window_width, window_height, 0);
     if (!sdl.window) {
         return log_sdl_error_and_cleanup_sdl("Unable to create window");
     }
@@ -117,69 +133,89 @@ int main(int argc, char **argv)
         return log_error_and_cleanup_sdl("Error setting up game");
     }
 
-    u64 start_time    = microtime();
-    u64 previous_time = 0;
-    u64 elapsed_time  = 0;
+    start_time = microtime();
+    time_per_frame = 1000000 / target_fps;
 
-    u64 fps_timer = 0;
-    u32 target_fps = 60;
-    u64 time_per_frame = 1000000 / target_fps;
-    u32 fps = 0;
+    return 0;
+}
 
-    SDL_Event event;
-    bool running = true;
+bool cleanup()
+{
+    destroy_game();
+    cleanup_sdl();
 
-    while (running) {
-        previous_time = start_time;
-        start_time = microtime();
+    return 0;
+}
 
-        elapsed_seconds = ((double)start_time - (double)previous_time) / 1000000.0;
-        
-        fps_timer += start_time - previous_time;
+bool do_frame()
+{
+    previous_time = start_time;
+    start_time = microtime();
 
-        while (fps_timer >= 1000000) {
-            fps_timer -= 1000000;
+    elapsed_seconds = ((double)start_time - (double)previous_time) / 1000000.0;
 
-            snprintf(temporary_string, TEMPORARY_STRING_SIZE, "FPS: %u", fps);
-            SDL_SetWindowTitle(sdl.window, temporary_string);
+    fps_timer += start_time - previous_time;
 
-            fps = 0;
-        }
+    while (fps_timer >= 1000000) {
+        fps_timer -= 1000000;
 
-        while (SDL_PollEvent(&event)) {
-            if (event.type == SDL_QUIT) {
-                running = false;
-            }
-        }
+        snprintf(temporary_string, TEMPORARY_STRING_SIZE, "FPS: %u", fps);
+        /* SDL_SetWindowTitle(sdl.window, temporary_string); */
 
-        if (!running) break;
-
-        update_input();
-
-        if (key_just_down(fullscreen_key)) {
-            toggle_fullscreen();
-        }
-
-        set_hex_color(0xff1f1f1f);
-        SDL_RenderClear(sdl.renderer);
-
-        if (!update_game()) {
-            running = false;
-            break;
-        }
-
-        SDL_RenderPresent(sdl.renderer);
-
-        while (( elapsed_time = microtime() - start_time ) < time_per_frame) {
-            SDL_Delay((u32) ((time_per_frame - elapsed_time) / 1000));
-        }
-
-        ++fps;
+        fps = 0;
     }
 
-    destroy_game();
+    while (SDL_PollEvent(&event)) {
+        if (event.type == SDL_QUIT ||
+            (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_q))
+        {
+            return cleanup();
+        }
+    }
 
-    cleanup_sdl();
+    update_input();
+
+    if (key_just_down(fullscreen_key)) {
+        toggle_fullscreen();
+    }
+
+    set_hex_color(0xff1f1f1f);
+    SDL_RenderClear(sdl.renderer);
+
+    if (!update_game()) {
+        return cleanup();
+    }
+
+    SDL_RenderPresent(sdl.renderer);
+
+    ++fps;
+
+    return true;
+}
+
+#ifdef __EMSCRIPTEN__
+EM_BOOL do_emscripten_frame(double time, void *userData)
+{
+    return do_frame();
+}
+#endif
+
+int main(int argc, char **argv)
+{
+    if (setup()) {
+        return 1;
+    }
+
+#ifdef __EMSCRIPTEN__
+    emscripten_request_animation_frame_loop(do_emscripten_frame, 0);
+#else
+    while (do_frame()) {
+        // Delay until next frame
+        while ((elapsed_time = microtime() - start_time) < time_per_frame) {
+            SDL_Delay((u32)((time_per_frame - elapsed_time) / 1000));
+        }
+    }
+#endif
 
     return 0;
 }

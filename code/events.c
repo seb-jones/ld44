@@ -380,7 +380,6 @@ Event *get_random_event()
     }
 
     if (all_seen) {
-        SDL_Log("All events seen. Resetting.");
         for (int i = 0; i < EVENTS_SIZE; ++i) {
             events[i].seen = false;
         }

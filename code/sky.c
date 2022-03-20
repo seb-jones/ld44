@@ -6,16 +6,10 @@ typedef struct SkyColor
 }
 SkyColor;
 
-#define SKY_COLORS_SIZE 9
-SkyColor sky_colors[SKY_COLORS_SIZE] = {
-    { 5, 7, 0xff000044 },
-    { 7, 9, 0xffFF9665 },
-    { 9, 12, 0xff4080ff },
-    { 12, 15, 0xff4080ff },
-    { 15, 17, 0xff4080ff },
-    { 17, 19, 0xffFF9665 },
-    { 19, 0, 0xff000044 },
-    { 0, 5, 0xff000044 },
+SkyColor sky_colors[] = {
+    {5, 7, 0xff000044},   {7, 9, 0xffFF9665},   {9, 12, 0xff4080ff},
+    {12, 15, 0xff4080ff}, {15, 17, 0xff4080ff}, {17, 19, 0xffFF9665},
+    {19, 0, 0xff000044},  {0, 5, 0xff000044},
 };
 
 #define STARS_SIZE 12
@@ -56,29 +50,40 @@ void draw_sky()
     SkyColor *sky_color = &sky_colors[0];
     SkyColor *next_sky_color = &sky_colors[0];
 
-    for (int i = 0; i < SKY_COLORS_SIZE; ++i) {
-        if (hour >= sky_colors[i].start_hour && hour < sky_colors[i].end_hour) {
+    size_t sky_colors_size = sizeof(sky_colors) / sizeof(*sky_colors);
+
+    // Find current sky colour based on `hours` global
+    for (int i = 0; i < sky_colors_size; ++i) {
+        int end_hour = sky_colors[i].end_hour;
+
+        if (end_hour == 0) {
+            // Make midnight a great number than all other hours for the purposes
+            // of the next if statement
+            end_hour = 24;
+        }
+
+        if (hour >= sky_colors[i].start_hour && hour < end_hour) {
             sky_color = &sky_colors[i];
 
-            if (i == SKY_COLORS_SIZE - 1)
+            if (i == sky_colors_size - 1)
                 next_sky_color = &sky_colors[0];
             else
                 next_sky_color = &sky_colors[i + 1];
         }
     }
 
-
     int start_minutes = sky_color->start_hour * 60;
     int end_minutes   = next_sky_color->start_hour * 60;
     int current_minutes = hour * 60 + minute;
 
+    // Calculate sun co-ordinates
     if (hour >= sunrise && hour <= sunset) {
         double t = inverse_lerp_int(sunrise * 60, sunset * 60, (hour * 60) + minute);
         sun->x = -sun->width + (int)((t) * (double)(render_width + sun->width * 2)) - (sun->width / 2);
         sun->y = render_height - (int)(sin(t * M_PI) * (double)render_height * 0.9); 
     }
 
-    // Sky Background
+    // Render Sky Background
     if (color_gone) {
         set_hex_color(0xffdddddd);
     }
@@ -89,14 +94,14 @@ void draw_sky()
 
     draw_rectangle(0, 0, render_width, render_height);
 
-    // Stars
+    // Render Stars
     if (!stars_gone && (hour >= sunset || hour <= sunrise)) {
         set_hex_color(0xffffffff);
         for (int i = 0; i < STARS_SIZE; ++i)
             SDL_RenderFillRect(sdl.renderer, &stars[i]);
     }
 
-    // Sun
+    // Render Sun
     if (hour > sunrise && hour < sunset)
         draw_sprite(sun);
 }
