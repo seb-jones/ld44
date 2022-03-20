@@ -4,6 +4,11 @@ build/ld44:	code/*.c
 	$(MAKE_BUILD_DIRECTORY)
 	clang -Wall -g -O0 -fsanitize=undefined -o build/ld44 code/main.c `sdl2-config --cflags` `sdl2-config --libs` -lm
 
+prod:	code/*.c
+	$(MAKE_BUILD_DIRECTORY)
+	clang -O3 -o build/ld44 code/main.c `sdl2-config --cflags` `sdl2-config --libs` -lm
+
+
 web:	code/*.c code/index.html
 	$(MAKE_BUILD_DIRECTORY)
 	cp code/index.html build/index.html
