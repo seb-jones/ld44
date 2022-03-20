@@ -53,7 +53,15 @@ void draw_sky()
     size_t sky_colors_size = sizeof(sky_colors) / sizeof(*sky_colors);
 
     for (int i = 0; i < sky_colors_size; ++i) {
-        if (hour >= sky_colors[i].start_hour && hour < sky_colors[i].end_hour) {
+        int end_hour = sky_colors[i].end_hour;
+
+        if (end_hour == 0) {
+            // Make midnight a great number than all other hours for the purposes
+            // of the next if statement
+            end_hour = 24;
+        }
+
+        if (hour >= sky_colors[i].start_hour && hour < end_hour) {
             sky_color = &sky_colors[i];
 
             if (i == sky_colors_size - 1)
