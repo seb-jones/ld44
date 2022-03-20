@@ -1,7 +1,9 @@
 # Faustian Sands
+
 Entry for Ludum Dare 44. Written in C, using SDL2 (v2.0.9). Developed on Arch Linux using Vim. Compiled on Windows with Visual Studio 2017.
 
 ## About
+
 When I first saw the theme, I spent some time thinking and then wrote the following:
 
 > 'Life' is not just our physical body or our conscious mind - it is everything we interactive with too. Even the stars in the sky are a part of our life.
@@ -15,18 +17,21 @@ This was the interpretation of the theme that I had in mind going into the compo
 ## Installation
 
 ### Windows
+
 Simply download one of the [builds](https://github.com/seb-jones/ld44/releases/tag/1.0), extract the zip file, and run the executable.
 
 ### Linux
+
 Clone this repo into a location of your choice.
 
 Install the SDL2 dev package from your system's package manager, or compile it yourself.
 
-`cd` into the cloned directory and run `make`.
+`cd` into the cloned directory and run `make` for the debug build, or `make prod` for the production build.
 
-Run `./a.out` to play.
+Run `./build/ld44` to play.
 
-## Usage
+## Controls
+
 When given options, use the `Number Keys` to choose. Otherwise, use the `Enter Key` to proceed.
 
 `F11` toggles fullscreen mode.
