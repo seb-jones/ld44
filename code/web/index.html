@@ -4,49 +4,11 @@
         <meta charset="utf-8">
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
         <title>Faustian Sands</title>
-        <style>
-/* Loading Icon source: https://loading.io/css/ */
-.lds-loading-icon {
-  display: inline-block;
-  position: relative;
-  width: 80px;
-  height: 80px;
-}
-.lds-loading-icon div {
-  display: inline-block;
-  position: absolute;
-  left: 8px;
-  width: 16px;
-  background: #fff;
-  animation: lds-loading-icon 1.2s cubic-bezier(0, 0.5, 0.5, 1) infinite;
-}
-.lds-loading-icon div:nth-child(1) {
-  left: 8px;
-  animation-delay: -0.24s;
-}
-.lds-loading-icon div:nth-child(2) {
-  left: 32px;
-  animation-delay: -0.12s;
-}
-.lds-loading-icon div:nth-child(3) {
-  left: 56px;
-  animation-delay: 0;
-}
-@keyframes lds-loading-icon {
-  0% {
-    top: 8px;
-    height: 64px;
-  }
-  50%, 100% {
-    top: 24px;
-    height: 32px;
-  }
-}
-        </style>
+        <link rel="stylesheet" href="loading-indicator.css">
     </head>
     <body style="padding: 2rem 0 0 0; margin: 0; background-color: rgb(38 38 38); font-family: sans-serif;">
         <div style="text-align: center; margin: 1rem 0;" id="loading-indicator">
-            <div class="lds-loading-icon"><div></div><div></div><div></div></div>
+            <div class="lds-loading-indicator"><div></div><div></div><div></div></div>
 
             <p style="color: white; margin: 0;">[ Loading ]</p>
         </div>
