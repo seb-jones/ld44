@@ -6,16 +6,10 @@ typedef struct SkyColor
 }
 SkyColor;
 
-#define SKY_COLORS_SIZE 8
-SkyColor sky_colors[SKY_COLORS_SIZE] = {
-    { 5, 7, 0xff000044 },
-    { 7, 9, 0xffFF9665 },
-    { 9, 12, 0xff4080ff },
-    { 12, 15, 0xff4080ff },
-    { 15, 17, 0xff4080ff },
-    { 17, 19, 0xffFF9665 },
-    { 19, 0, 0xff000044 },
-    { 0, 5, 0xff000044 },
+SkyColor sky_colors[] = {
+    {5, 7, 0xff000044},   {7, 9, 0xffFF9665},   {9, 12, 0xff4080ff},
+    {12, 15, 0xff4080ff}, {15, 17, 0xff4080ff}, {17, 19, 0xffFF9665},
+    {19, 0, 0xff000044},  {0, 5, 0xff000044},
 };
 
 #define STARS_SIZE 12
@@ -56,11 +50,13 @@ void draw_sky()
     SkyColor *sky_color = &sky_colors[0];
     SkyColor *next_sky_color = &sky_colors[0];
 
-    for (int i = 0; i < SKY_COLORS_SIZE; ++i) {
+    size_t sky_colors_size = sizeof(sky_colors) / sizeof(*sky_colors);
+
+    for (int i = 0; i < sky_colors_size; ++i) {
         if (hour >= sky_colors[i].start_hour && hour < sky_colors[i].end_hour) {
             sky_color = &sky_colors[i];
 
-            if (i == SKY_COLORS_SIZE - 1)
+            if (i == sky_colors_size - 1)
                 next_sky_color = &sky_colors[0];
             else
                 next_sky_color = &sky_colors[i + 1];
