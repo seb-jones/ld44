@@ -53,7 +53,9 @@ void hex_to_argb(u32 hex, u8 *a, u8 *r, u8 *g, u8 *b)
 
 u32 argb_to_hex(u8 a, u8 r, u8 g, u8 b)
 {
-    return b | (g << 8) | (r << 16) | (a << 24);
+    // Note that we cast `a` to u32 to prevent possible undefined behaviour
+    // when shifting by 24 bits to the left
+    return (b | (g << 8) | (r << 16) | ((u32)a << 24));
 }
 
 void set_hex_color(u32 color)
