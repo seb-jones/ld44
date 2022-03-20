@@ -50,7 +50,7 @@ void draw_sky()
     SkyColor *sky_color = &sky_colors[0];
     SkyColor *next_sky_color = &sky_colors[0];
 
-    size_t sky_colors_size = sizeof(sky_colors) / sizeof(*sky_colors);
+    size_t sky_colors_size = ARRAY_COUNT(sky_colors);
 
     // Find current sky colour based on `hours` global
     for (int i = 0; i < sky_colors_size; ++i) {

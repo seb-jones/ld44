@@ -41,6 +41,8 @@ int window_height = 768;
 int render_width = 320;
 int render_height = 240;
 
+#define ARRAY_COUNT(a) (sizeof(a) / sizeof(*a))
+
 #include "globals.c"
 #include "input.c"
 #include "render.c"
