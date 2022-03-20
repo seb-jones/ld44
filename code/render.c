@@ -72,7 +72,7 @@ double inverse_lerp_int(int a, int b, int t)
 
 u8 lerp_u8(u8 a, u8 b, double t)
 {
-    return a + (u8)((double)(b - a) * t);
+    return a + (int)((double)(b - a) * t);
 }
 
 u32 lerp_color(u32 color_1, u32 color_2, double t)
