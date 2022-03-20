@@ -245,101 +245,156 @@ char *hear_out_color_for_speed()
     return "bargain_colors_for_speed";
 }
 
-#define EVENTS_SIZE 15
-Event events[EVENTS_SIZE] = {
+Event events[] = {
     {
         "river",
-        "You arrive at a river. It is running fast, but fording it would provide a considerable saving of time.",
-        { "Ford the river",  ford_the_river, },
-        { "Find another way",  find_another_way_across_the_river, },
+        "You arrive at a river. It is running fast, but fording it would "
+        "provide a considerable saving of time.",
+        {
+            "Ford the river",
+            ford_the_river,
+        },
+        {
+            "Find another way",
+            find_another_way_across_the_river,
+        },
         NULL,
         true,
     },
     {
         "priest",
         "You encounter a travelling priest. He looks hungry.",
-        { "Give him some food",  feed_priest, },
-        { "Ignore him",  ignore_priest, },
+        {
+            "Give him some food",
+            feed_priest,
+        },
+        {
+            "Ignore him",
+            ignore_priest,
+        },
         check_for_food,
         true,
     },
     {
         "soldier",
         "You find a gravely-wounded soldier lying in the shade.",
-        { "Bandage his wound",  help_soldier, },
-        { "Ignore him",  ignore_soldier, },
+        {
+            "Bandage his wound",
+            help_soldier,
+        },
+        {
+            "Ignore him",
+            ignore_soldier,
+        },
         check_for_bandages,
         true,
     },
     {
         "trap",
         "You get your leg caught in a trap.",
-        { "Apply a bandage",  apply_bandages, },
-        { "Ignore the wound",  ignore_trap_wound, },
+        {
+            "Apply a bandage",
+            apply_bandages,
+        },
+        {
+            "Ignore the wound",
+            ignore_trap_wound,
+        },
         check_for_bandages,
         true,
     },
     {
         "merchant",
         "A travelling merchant offers you some food for 5 coins.",
-        { "Accept",  accept_merchant, },
-        { "Decline",  decline_merchant, },
+        {
+            "Accept",
+            accept_merchant,
+        },
+        {
+            "Decline",
+            decline_merchant,
+        },
         check_for_5_money,
         true,
     },
     {
         "doctor",
-        "You meet a doctor on his way to town. He offers to cure all your ills for 5 coins.",
-        { "Accept",  accept_doctor, },
-        { "Decline",  decline_doctor, },
+        "You meet a doctor on his way to town. He offers to cure all your ills "
+        "for 5 coins.",
+        {
+            "Accept",
+            accept_doctor,
+        },
+        {
+            "Decline",
+            decline_doctor,
+        },
         can_pay_doctor,
         true,
     },
     {
         "vultures",
         "You spot some vultures on the horizon.",
-        { "Investigate",  investigate_vultures, },
-        { "Ignore Them",  ignore_vultures, },
+        {
+            "Investigate",
+            investigate_vultures,
+        },
+        {
+            "Ignore Them",
+            ignore_vultures,
+        },
         NULL,
         true,
     },
     {
         "mushrooms",
         "You find some curious mushrooms.",
-        { "Eat them",  eat_mushrooms, },
-        { "Ignore Them",  ignore_mushrooms, },
+        {
+            "Eat them",
+            eat_mushrooms,
+        },
+        {
+            "Ignore Them",
+            ignore_mushrooms,
+        },
         NULL,
         true,
     },
     {
         "bandits",
         "A group of bandits approach.",
-        { "Stand your ground",  fight_bandits, },
-        { "Evade them",  evade_bandits, },
+        {
+            "Stand your ground",
+            fight_bandits,
+        },
+        {
+            "Evade them",
+            evade_bandits,
+        },
         NULL,
         true,
     },
     {
         "food",
         "You find a can of food.",
-        { "Take it.", take_food },
-        { "Leave it.", leave_food },
+        {"Take it.", take_food},
+        {"Leave it.", leave_food},
         NULL,
         true,
     },
     {
         "bandages",
         "You find some bandages.",
-        { "Take them.", take_bandages },
-        { "Leave them.", leave_bandages },
+        {"Take them.", take_bandages},
+        {"Leave them.", leave_bandages},
         NULL,
         true,
     },
     {
         "money",
         "You find some money.",
-        { "Take it.", take_money },
-        { "Leave it.", leave_money },
+        {"Take it.", take_money},
+        {"Leave it.", leave_money},
         NULL,
         true,
     },
@@ -347,24 +402,42 @@ Event events[EVENTS_SIZE] = {
     {
         "eye_for_food",
         "A mysterious man appears. He wears a fine suit and offers a proposal.",
-        { "Hear him out",  hear_out_eye_for_food, },
-        { "Ignore him",  ignore_devil, },
+        {
+            "Hear him out",
+            hear_out_eye_for_food,
+        },
+        {
+            "Ignore him",
+            ignore_devil,
+        },
         NULL,
         false,
     },
     {
         "stars_for_health",
         "A mysterious man appears. He wears a fine suit and offers a proposal.",
-        { "Hear him out",  hear_out_stars_for_health, },
-        { "Ignore him",  ignore_devil, },
+        {
+            "Hear him out",
+            hear_out_stars_for_health,
+        },
+        {
+            "Ignore him",
+            ignore_devil,
+        },
         NULL,
         false,
     },
     {
         "colors_for_speed",
         "A mysterious man appears. He wears a fine suit and offers a proposal.",
-        { "Hear him out",  hear_out_color_for_speed, },
-        { "Ignore him",  ignore_devil, },
+        {
+            "Hear him out",
+            hear_out_color_for_speed,
+        },
+        {
+            "Ignore him",
+            ignore_devil,
+        },
         NULL,
         false,
     },
@@ -373,14 +446,16 @@ Event events[EVENTS_SIZE] = {
 Event *get_random_event()
 {
     bool all_seen = true;
-    for (int i = 0; i < EVENTS_SIZE; ++i) {
+    size_t events_size = ARRAY_COUNT(events);
+
+    for (int i = 0; i < events_size; ++i) {
         if (!events[i].seen) {
             all_seen = false;
         }
     }
 
     if (all_seen) {
-        for (int i = 0; i < EVENTS_SIZE; ++i) {
+        for (int i = 0; i < events_size; ++i) {
             events[i].seen = false;
         }
     }
@@ -388,7 +463,7 @@ Event *get_random_event()
     Event *event;
 
     do {
-        event = &events[rand() % EVENTS_SIZE];
+        event = &events[rand() % events_size];
     }
     while(!event->allow_random_selection || event->seen);
 
@@ -397,7 +472,9 @@ Event *get_random_event()
 
 Event *get_event_by_name(const char *name)
 {
-    for (int i = 0; i < EVENTS_SIZE; ++i) {
+    size_t events_size = ARRAY_COUNT(events);
+
+    for (int i = 0; i < events_size; ++i) {
         if (!strcmp(events[i].name, name)) {
             return &events[i];
         }
@@ -436,29 +513,50 @@ char *remove_color_for_speed()
     return "Suddenly, the world around you becomes devoid of saturation. Everything is a tint of black or a shade of white. You know not where the man has gone, but your legs feel vital and capable of superior speed.";
 }
 
-#define BARGAINS_SIZE 3
-Event bargains[BARGAINS_SIZE] = {
+Event bargains[] = {
     {
         "bargain_eye_for_food",
-        "\"I have enough food here to keep you full for life. All I ask in return is a mere trifle... your left eye.\" The man draws a menacing knife from his pocket.",
-        { "Take the blade and cut out your eye",  remove_eye_for_food, },
-        { "Decline his ridiculous proposal",  decline_devil, },
+        "\"I have enough food here to keep you full for life. All I ask in "
+        "return is a mere trifle... your left eye.\" The man draws a menacing "
+        "knife from his pocket.",
+        {
+            "Take the blade and cut out your eye",
+            remove_eye_for_food,
+        },
+        {
+            "Decline his ridiculous proposal",
+            decline_devil,
+        },
         NULL,
         false,
     },
     {
         "bargain_stars_for_health",
-        "\"I can take the pain away. You'll never hurt again. All I require\" - He gestures upwards - \"is the stars in your sky.",
-        { "Accept his offer",  remove_stars_for_health, },
-        { "Decline his bizarre proposal",  decline_devil, },
+        "\"I can take the pain away. You'll never hurt again. All I require\" "
+        "- He gestures upwards - \"is the stars in your sky.",
+        {
+            "Accept his offer",
+            remove_stars_for_health,
+        },
+        {
+            "Decline his bizarre proposal",
+            decline_devil,
+        },
         NULL,
         false,
     },
     {
         "bargain_colors_for_speed",
-        "\"I can make your journey many hours shorter. All I need... is the colour of your world.\"",
-        { "Accept his offer",  remove_color_for_speed, },
-        { "Decline his disturbing proposal",  decline_devil, },
+        "\"I can make your journey many hours shorter. All I need... is the "
+        "colour of your world.\"",
+        {
+            "Accept his offer",
+            remove_color_for_speed,
+        },
+        {
+            "Decline his disturbing proposal",
+            decline_devil,
+        },
         NULL,
         false,
     },
@@ -466,7 +564,9 @@ Event bargains[BARGAINS_SIZE] = {
 
 Event *get_bargain_by_name(const char *name)
 {
-    for (int i = 0; i < BARGAINS_SIZE; ++i) {
+    size_t bargains_size = ARRAY_COUNT(bargains);
+
+    for (int i = 0; i < bargains_size; ++i) {
         if (!strcmp(bargains[i].name, name)) {
             return &bargains[i];
         }
