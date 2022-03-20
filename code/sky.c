@@ -52,6 +52,7 @@ void draw_sky()
 
     size_t sky_colors_size = sizeof(sky_colors) / sizeof(*sky_colors);
 
+    // Find current sky colour based on `hours` global
     for (int i = 0; i < sky_colors_size; ++i) {
         int end_hour = sky_colors[i].end_hour;
 
@@ -75,13 +76,14 @@ void draw_sky()
     int end_minutes   = next_sky_color->start_hour * 60;
     int current_minutes = hour * 60 + minute;
 
+    // Calculate sun co-ordinates
     if (hour >= sunrise && hour <= sunset) {
         double t = inverse_lerp_int(sunrise * 60, sunset * 60, (hour * 60) + minute);
         sun->x = -sun->width + (int)((t) * (double)(render_width + sun->width * 2)) - (sun->width / 2);
         sun->y = render_height - (int)(sin(t * M_PI) * (double)render_height * 0.9); 
     }
 
-    // Sky Background
+    // Render Sky Background
     if (color_gone) {
         set_hex_color(0xffdddddd);
     }
@@ -92,14 +94,14 @@ void draw_sky()
 
     draw_rectangle(0, 0, render_width, render_height);
 
-    // Stars
+    // Render Stars
     if (!stars_gone && (hour >= sunset || hour <= sunrise)) {
         set_hex_color(0xffffffff);
         for (int i = 0; i < STARS_SIZE; ++i)
             SDL_RenderFillRect(sdl.renderer, &stars[i]);
     }
 
-    // Sun
+    // Render Sun
     if (hour > sunrise && hour < sunset)
         draw_sprite(sun);
 }
