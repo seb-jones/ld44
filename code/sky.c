@@ -12,20 +12,10 @@ SkyColor sky_colors[] = {
     {19, 0, 0xff000044},  {0, 5, 0xff000044},
 };
 
-#define STARS_SIZE 12
-SDL_Rect stars[STARS_SIZE] = {
-    { 10, 10, 1, 1 },
-    { 100, 50, 1, 1 },
-    { 60, 20, 1, 1 },
-    { 30, 70, 1, 1 },
-    { 100, 100, 1, 1 },
-    { 200, 80, 1, 1 },
-    { 230, 170, 1, 1 },
-    { 180, 120, 1, 1 },
-    { 120, 160, 1, 1 },
-    { 80, 150, 1, 1 },
-    { 300, 30, 1, 1 },
-    { 280, 100, 1, 1 },
+SDL_Rect stars[] = {
+    {10, 10, 1, 1},   {100, 50, 1, 1}, {60, 20, 1, 1},   {30, 70, 1, 1},
+    {100, 100, 1, 1}, {200, 80, 1, 1}, {230, 170, 1, 1}, {180, 120, 1, 1},
+    {120, 160, 1, 1}, {80, 150, 1, 1}, {300, 30, 1, 1},  {280, 100, 1, 1},
 };
 
 Sprite *sun = 0;
@@ -50,7 +40,7 @@ void draw_sky()
     SkyColor *sky_color = &sky_colors[0];
     SkyColor *next_sky_color = &sky_colors[0];
 
-    size_t sky_colors_size = sizeof(sky_colors) / sizeof(*sky_colors);
+    size_t sky_colors_size = ARRAY_COUNT(sky_colors);
 
     // Find current sky colour based on `hours` global
     for (int i = 0; i < sky_colors_size; ++i) {
@@ -97,7 +87,10 @@ void draw_sky()
     // Render Stars
     if (!stars_gone && (hour >= sunset || hour <= sunrise)) {
         set_hex_color(0xffffffff);
-        for (int i = 0; i < STARS_SIZE; ++i)
+
+        size_t stars_size = ARRAY_COUNT(stars);
+
+        for (int i = 0; i < stars_size; ++i)
             SDL_RenderFillRect(sdl.renderer, &stars[i]);
     }
 
