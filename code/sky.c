@@ -6,7 +6,7 @@ typedef struct SkyColor
 }
 SkyColor;
 
-#define SKY_COLORS_SIZE 9
+#define SKY_COLORS_SIZE 8
 SkyColor sky_colors[SKY_COLORS_SIZE] = {
     { 5, 7, 0xff000044 },
     { 7, 9, 0xffFF9665 },
@@ -66,7 +66,6 @@ void draw_sky()
                 next_sky_color = &sky_colors[i + 1];
         }
     }
-
 
     int start_minutes = sky_color->start_hour * 60;
     int end_minutes   = next_sky_color->start_hour * 60;
