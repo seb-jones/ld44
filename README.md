@@ -30,6 +30,16 @@ Install the SDL2 dev package from your system's package manager, or compile it y
 
 Run `./build/ld44` to play.
 
+### Web
+
+The game can also be built for the web, using [Emscripten](https://emscripten.org/). Assuming you have that set up and have `emcc` in you PATH, building should be as simple as `make web` for debug builds and `make web-prod` for production builds.
+
+This will place an `index.html` file and other web-specific assets in the `build/` directory. To test locally you will need to fire up a server to serve the build directory. For example, if you have `npm`:
+
+```sh
+npx serve build
+```
+
 ## Controls
 
 When given options, use the `Number Keys` to choose. Otherwise, use the `Enter Key` to proceed.
