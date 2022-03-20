@@ -106,9 +106,9 @@
                     return canvas;
                 })(),
                 setStatus: function(text) {
-                    var downloadProgressText = text.match(/([^(]+)\((\d+(\.\d+)?)\/(\d+)\)/);
+                    var textHasDownloadProgress = text.match(/([^(]+)\((\d+(\.\d+)?)\/(\d+)\)/);
 
-                    if (downloadProgressText) {
+                    if (textHasDownloadProgress) {
                         console.log('Status Update: ' + text);
                     } else {
                         console.log('No progress indicated in Status Update - assuming start of game and hiding loading indicator.');
